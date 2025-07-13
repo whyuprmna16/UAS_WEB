@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Jadwal - Sistem Penjadwalan Dosen</title>
+    <title>Tambahkan Pertemuan - Sistem Penjadwalan Dosen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -25,7 +25,8 @@
                 </div>
                 <div class="flex items-center">
                     <a href="dashboard-mahasiswa.html" class="text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                    <a href="jadwal-mahasiswa.html" class="text-white bg-blue-700 px-3 py-2 rounded-md text-sm font-medium ml-4">Buat Jadwal Baru</a>
+                    <a href="jadwal-mahasiswa.html" class="text-white bg-blue-700 px-3 py-2 rounded-md text-sm font-medium ml-4">Tambahkan Pertemuan Baru</a>
+                    <a href="riwayat-pertemuan-mahasiswa.html" class="text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Riwayat Pertemuan</a>
                     <a href="#" class="logout-link text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</a>
                 </div>
             </div>
@@ -33,7 +34,7 @@
     </nav>
 
     <main class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-gray-800 mb-6">Buat Jadwal Pertemuan Baru</h2>
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Ajukan Pertemuan Baru</h2>
         <div id="success-alert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" style="display: none;"></div>
 
         <form id="form-pengajuan" class="space-y-6">
@@ -63,7 +64,7 @@
             </div>
 
             <div>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Ajukan Jadwal</button>
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Ajukan Pertemuan</button>
             </div>
         </form>
     </main>
@@ -71,15 +72,11 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
+        // Logika spesifik untuk halaman ini
         $(document).ready(function() {
             $('#jadwal-container').on('click', '.jadwal-card', function() {
                 $('.jadwal-card').removeClass('active');
                 $(this).addClass('active');
-            });
-            $('#form-pengajuan').on('submit', function(event) {
-                event.preventDefault(); 
-                $('#success-alert').text('Berhasil! Pengajuan jadwal Anda telah terkirim.').fadeIn();
-                setTimeout(function() { window.location.href = "dashboard-mahasiswa.html"; }, 2000);
             });
         });
     </script>
