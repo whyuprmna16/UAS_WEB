@@ -6,36 +6,31 @@
     <title>Tambahkan Pertemuan - Sistem Penjadwalan Dosen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body { font-family: 'Poppins', sans-serif; }
+        /* Diperbarui: Styling yang lebih jelas untuk kartu yang dipilih */
         .jadwal-card.active {
-            border-color: #3b82f6; /* blue-500 */
-            box-shadow: 0 0 0 2px #3b82f6;
+            border-color: #2563eb; /* blue-600 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+            background-color: #eff6ff; /* blue-50 */
+        }
+        /* Diperbarui: Styling untuk dropdown menu agar muncul saat di-hover */
+        .dropdown:hover .dropdown-menu {
+            display: block;
         }
     </style>
 </head>
 <body class="bg-gray-100">
 
-    <nav class="bg-blue-600 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <img src="assets/img/logo.png" alt="Logo" class="h-8 w-8 mr-2">
-                    <a href="#" class="text-white font-bold text-xl">Penjadwalan Dosen</a>
-                </div>
-                <div class="flex items-center">
-                    <a href="dashboard-mahasiswa.html" class="text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                    <a href="jadwal-mahasiswa.html" class="text-white bg-blue-700 px-3 py-2 rounded-md text-sm font-medium ml-4">Tambahkan Pertemuan Baru</a>
-                    <a href="riwayat-pertemuan-mahasiswa.html" class="text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Riwayat Pertemuan</a>
-                    <a href="#" class="logout-link text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <div id="navbar-container"></div>
 
     <main class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-gray-800 mb-6">Ajukan Pertemuan Baru</h2>
-        <div id="success-alert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" style="display: none;"></div>
+        <div id="success-alert" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md relative mb-6" style="display: none;" role="alert">
+            <p class="font-bold">Berhasil!</p>
+            <p>Pengajuan pertemuan Anda telah terkirim dan akan segera diproses oleh dosen.</p>
+        </div>
 
         <form id="form-pengajuan" class="space-y-6">
             <div class="bg-white p-6 rounded-lg shadow">
@@ -44,7 +39,7 @@
                     <label for="pilihDosen" class="block text-sm font-medium text-gray-700">Pilih Dosen yang dituju:</label>
                     <select id="pilihDosen" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                         <option selected disabled>-- Pilih salah satu dosen --</option>
-                    </select>
+                        </select>
                 </div>
             </div>
 
@@ -52,33 +47,26 @@
                 <h3 class="text-lg font-medium leading-6 text-gray-900">Langkah 2: Pilih Jadwal Tersedia</h3>
                 <div id="jadwal-container" class="mt-4 flex flex-wrap -m-2">
                     <p class="text-gray-500 w-full p-2">Pilih dosen untuk melihat jadwal yang tersedia.</p>
-                </div>
+                    </div>
             </div>
 
             <div class="bg-white p-6 rounded-lg shadow">
                 <h3 class="text-lg font-medium leading-6 text-gray-900">Langkah 3: Isi Detail Keperluan</h3>
                 <div class="mt-4">
                     <label for="keperluan" class="block text-sm font-medium text-gray-700">Tuliskan secara singkat keperluan Anda:</label>
-                    <textarea id="keperluan" rows="4" class="mt-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border border-gray-300 rounded-md" placeholder="Contoh: Bimbingan Tugas Akhir mengenai Bab 4..."></textarea>
+                    <textarea id="keperluan" rows="4" class="mt-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border border-gray-300 rounded-md" placeholder="Contoh: Bimbingan Tugas Akhir mengenai Bab 4..." required></textarea>
                 </div>
             </div>
 
             <div>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Ajukan Pertemuan</button>
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Ajukan Pertemuan
+                </button>
             </div>
         </form>
     </main>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="assets/js/main.js"></script>
-    <script>
-        // Logika spesifik untuk halaman ini
-        $(document).ready(function() {
-            $('#jadwal-container').on('click', '.jadwal-card', function() {
-                $('.jadwal-card').removeClass('active');
-                $(this).addClass('active');
-            });
-        });
-    </script>
-</body>
+    </body>
 </html>

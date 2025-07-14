@@ -6,33 +6,27 @@
     <title>Dashboard Mahasiswa - Sistem Penjadwalan Dosen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Poppins', sans-serif; } </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style> 
+        body { font-family: 'Poppins', sans-serif; } 
+        /* Diperbarui: Styling untuk dropdown menu agar muncul saat di-hover */
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
 
-    <nav class="bg-blue-600 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <img src="assets/img/logo.png" alt="Logo" class="h-8 w-8 mr-2">
-                    <a href="#" class="text-white font-bold text-xl">Penjadwalan Dosen</a>
-                </div>
-                <div class="flex items-center">
-                    <a href="dashboard-mahasiswa.html" class="text-white bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                    <a href="jadwal-mahasiswa.html" class="text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Tambahkan Pertemuan Baru</a>
-                    <a href="riwayat-pertemuan-mahasiswa.html" class="text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Riwayat Pertemuan</a>
-                    <a href="index.html" class="logout-link text-blue-200 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <div id="navbar-container"></div>
 
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <div class="bg-white p-8 rounded-lg shadow-md mb-6">
-                <h1 class="text-3xl font-bold text-gray-800">Selamat Datang, <span class="user-name"></span>!</h1>
-                <p class="mt-2 text-gray-600">Ini adalah halaman dashboard Anda untuk melihat jadwal pertemuan yang aktif dan membuat pengajuan baru.</p>
-                <a href="jadwal-mahasiswa.html" class="mt-4 inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition-colors">Tambahkan Pertemuan Baru</a>
+                <h1 class="text-3xl font-bold text-gray-800">Selamat Datang di Dashboard Anda!</h1>
+                <p class="mt-2 text-gray-600">Di sini Anda dapat melihat jadwal pertemuan yang aktif atau mengajukan pertemuan baru dengan dosen Anda.</p>
+                <a href="jadwal-mahasiswa.html" class="mt-4 inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition-colors">
+                    + Ajukan Pertemuan Baru
+                </a>
             </div>
 
             <h3 class="text-2xl font-semibold text-gray-700 mb-4">Jadwal Pertemuan Aktif Anda</h3>
@@ -48,8 +42,7 @@
                         </tr>
                     </thead>
                     <tbody id="jadwal-table-body" class="bg-white divide-y divide-gray-200">
-                        <!-- Konten tabel akan diisi oleh main.js -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -57,5 +50,43 @@
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+        $(document).ready(function() {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (loggedInUser && loggedInUser.role === 'mahasiswa') {
+                const storageKey = `pertemuan_${loggedInUser.id}`;
+                const allMeetings = JSON.parse(localStorage.getItem(storageKey)) || [];
+                // Filter hanya pertemuan yang statusnya 'Disetujui' atau 'Menunggu'
+                const activeMeetings = allMeetings.filter(p => p.status === 'Disetujui' || p.status === 'Menunggu');
+                
+                const tableBody = $('#jadwal-table-body');
+                tableBody.empty();
+
+                if (activeMeetings.length > 0) {
+                    activeMeetings.forEach((item, index) => {
+                        let statusClass = '';
+                        if (item.status === 'Disetujui') {
+                            statusClass = 'bg-green-100 text-green-800';
+                        } else if (item.status === 'Menunggu') {
+                            statusClass = 'bg-yellow-100 text-yellow-800';
+                        }
+                        const statusBadge = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${item.status}</span>`;
+
+                        const rowHtml = `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${index + 1}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.dosen}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">${item.keperluan}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.jadwal}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">${statusBadge}</td>
+                        </tr>`;
+                        tableBody.append(rowHtml);
+                    });
+                } else {
+                    tableBody.append(`<tr><td colspan="5" class="text-center text-gray-500 py-6">Tidak ada jadwal pertemuan aktif.</td></tr>`);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
