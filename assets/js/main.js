@@ -79,14 +79,25 @@ $(document).ready(function() {
         // Render Navbar Dinamis di semua halaman
         renderNavbar(loggedInUser);
 
+        // ==========================================================
+        // === BAGIAN BARU: Logika untuk Dropdown Menu di Navbar ===
+        // ==========================================================
+        $('body').on('click', '.dropdown-trigger', function(event) {
+            event.stopPropagation(); // Mencegah event klik menyebar ke elemen document
+            $(this).parent('.dropdown').toggleClass('is-active');
+        });
+
+        // Menutup dropdown jika pengguna mengklik di luar area dropdown
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('.dropdown').length) {
+                $('.dropdown').removeClass('is-active');
+            }
+        });
+        // ==========================================================
         // Logout
         // Event delegation diperlukan karena link logout dibuat secara dinamis
         $('body').on('click', '.logout-link', function(e) {
-            e.preventDefault();
-            localStorage.removeItem('loggedInUser');
-            // Untuk demo, kita tidak hapus data pertemuan agar persisten
-            // localStorage.clear(); 
-            window.location.href = 'index.html';
+            // ... kode logout Anda yang sudah ada
         });
     } else {
         // Jika tidak ada pengguna yang login, paksa kembali ke halaman login
@@ -153,13 +164,13 @@ $(document).ready(function() {
                             </button>
                         </div>
                         <div class="relative ml-4 dropdown">
-                            <button class="flex items-center text-white focus:outline-none">
+                            <button class="dropdown-trigger flex items-center text-white focus:outline-none">
                                 <span class="text-sm font-medium">${user.name}</span>
                                 <i class="fas fa-chevron-down ml-2 text-xs"></i>
                             </button>
                             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
                                 <a href="profil.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
-                                <a href="#" class="logout-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                                <a href="index.html" class="logout-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
                             </div>
                         </div>
                     </div>
