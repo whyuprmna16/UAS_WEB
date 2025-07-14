@@ -95,9 +95,10 @@ $(document).ready(function() {
         });
         // ==========================================================
         // Logout
-        // Event delegation diperlukan karena link logout dibuat secara dinamis
         $('body').on('click', '.logout-link', function(e) {
-            // ... kode logout Anda yang sudah ada
+            // Kita tidak lagi memerlukan e.preventDefault() atau window.location.href
+            // Biarkan browser mengikuti href="index.html" secara alami
+            localStorage.removeItem('loggedInUser');
         });
     } else {
         // Jika tidak ada pengguna yang login, paksa kembali ke halaman login
