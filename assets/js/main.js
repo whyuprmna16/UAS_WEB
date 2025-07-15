@@ -1,21 +1,28 @@
 // File: assets/js/main.js
-// Deskripsi: Versi terbaru dengan localStorage, profil, validasi jadwal, dan notifikasi.
+// Deskripsi: Berisi semua data dan logika utama aplikasi (Versi Final)
 
 // =================================================
-// DATA PENGGUNA (DATABASE SIMULASI)
+// DATA PENGGUNA (DATABASE SIMULASI) - DIPERBANYAK
 // =================================================
 const users = {
     // Data Dosen
-    '0002085908': { name: 'Prof. Siti Nurmaini, M.T', password: '123456', role: 'dosen', email: 'siti.nurmaini@unsri.ac.id', bidangKeahlian: 'Kecerdasan Buatan, Robotika' },
-    '0022018703': { name: 'Dr. Ir. Ahmad Heryanto, M.T', password: '123456', role: 'dosen', email: 'ahmad.heryanto@unsri.ac.id', bidangKeahlian: 'Jaringan Komputer, Keamanan Siber' },
-    '0022108702': { name: 'Iman Saladin B.Azhar, S.Kom., M.M.S.I', password: '123456', role: 'dosen', email: 'iman.saladin@unsri.ac.id', bidangKeahlian: 'Rekayasa Perangkat Lunak, Sistem Informasi' },
+    '0002085908': { name: 'Prof. Siti Nurmaini, M.T.', password: '123456', role: 'dosen' },
+    '0022018703': { name: 'Dr. Ir. Ahmad Heryanto, M.T.', password: '123456', role: 'dosen' },
+    '0022108702': { name: 'Iman Saladin, S.Kom., M.M.S.I.', password: '123456', role: 'dosen' },
+    '0011223301': { name: 'Dr. Retno Lestari, M.Kom.', password: '123456', role: 'dosen' },
+    '0044556602': { name: 'Budi Santoso, S.T., M.Eng.', password: '123456', role: 'dosen' },
+    '0077889903': { name: 'Prof. Dr. Ir. Rina Marlina, M.Sc.', password: '123456', role: 'dosen' },
+    
     // Data Mahasiswa
-    '09030582226053': { name: 'Wahyu Pramana', password: '123456', role: 'mahasiswa', email: 'wahyu.pramana@student.unsri.ac.id', jurusan: 'Sistem Komputer' },
-    '0903058212608': { name: 'Rahayu Prasiska', password: '123456', role: 'mahasiswa', email: 'rahayu.prasiska@student.unsri.ac.id', jurusan: 'Sistem Informasi' },
-    '09030582126015': { name: 'Wahyu Hidayat', password: '123456', role: 'mahasiswa', email: 'wahyu.hidayat@student.unsri.ac.id', jurusan: 'Teknik Informatika' }
+    '09030582226053': { name: 'Wahyu Pramana', password: '123456', role: 'mahasiswa' },
+    '0903058212608': { name: 'Rahayu Prasiska', password: '123456', role: 'mahasiswa' },
+    '09030582126015': { name: 'Wahyu Hidayat', password: '123456', role: 'mahasiswa' },
+    '09030582327001': { name: 'Andi Wijaya', password: '123456', role: 'mahasiswa' },
+    '09030582327002': { name: 'Citra Lestari', password: '123456', role: 'mahasiswa' },
+    '09030582327003': { name: 'Eko Nugroho', password: '123456', role: 'mahasiswa' },
+    '09030582327004': { name: 'Fitriani Indah', password: '123456', role: 'mahasiswa' }
 };
 
-// Jadwal ketersediaan default Dosen
 const jadwalDosen = {
     '0002085908': [
         { hari: 'Selasa', tanggal: '22 Juli 2025', jam: '09:00 - 09:30' },
@@ -30,17 +37,86 @@ const jadwalDosen = {
     '0022108702': [
         { hari: 'Jumat', tanggal: '25 Juli 2025', jam: '09:30 - 10:00' },
         { hari: 'Jumat', tanggal: '25 Juli 2025', jam: '10:00 - 10:30' }
+    ],
+    '0011223301': [
+        { hari: 'Senin', tanggal: '21 Juli 2025', jam: '13:00 - 13:30' },
+        { hari: 'Rabu', tanggal: '23 Juli 2025', jam: '09:00 - 09:30' },
+    ],
+    '0044556602': [
+        { hari: 'Selasa', tanggal: '22 Juli 2025', jam: '14:00 - 14:30' },
+        { hari: 'Kamis', tanggal: '24 Juli 2025', jam: '10:30 - 11:00' }
+    ],
+    '0077889903': [
+        { hari: 'Senin', tanggal: '21 Juli 2025', jam: '11:00 - 11:30' },
+        { hari: 'Rabu', tanggal: '23 Juli 2025', jam: '11:00 - 11:30' },
+        { hari: 'Jumat', tanggal: '25 Juli 2025', jam: '14:00 - 14:30' }
     ]
 };
 
-// Data pertemuan awal (hanya akan di-load jika localStorage kosong)
+// --- DATA AWAL PERTEMUAN UNTUK SETIAP MAHASISWA ---
 const initialMahasiswaData = {
-    '09030582226053': [{ id: 1, dosenNidn: '0022018703', dosen: 'Dr. Ir. Ahmad Heryanto, M.T', keperluan: 'Bimbingan Tugas Akhir - Bab 3', jadwal: 'Senin, 21 Juli 2025, 10:00 - 10:30', status: 'Disetujui', notifikasi: 'sudah_dilihat' }],
-    // ... data lainnya bisa ditambahkan
+    '09030582226053': [
+        { dosen: 'Dr. Ir. Ahmad Heryanto, M.T.', keperluan: 'Bimbingan Tugas Akhir - Bab 3', jadwal: '21 Juli 2025, 10:00', status: 'Disetujui' },
+        { dosen: 'Prof. Siti Nurmaini, M.T.', keperluan: 'Konsultasi Kerja Praktik', jadwal: '22 Juli 2025, 09:30', status: 'Menunggu' },
+        { dosen: 'Dr. Retno Lestari, M.Kom.', keperluan: 'Revisi Jurnal Internasional', jadwal: '21 Juli 2025, 13:00', status: 'Menunggu' },
+        { dosen: 'Dr. Ir. Ahmad Heryanto, M.T.', keperluan: 'Bimbingan Tugas Akhir - Bab 2', jadwal: '14 Juli 2025, 10:00', status: 'Selesai', feedback: "Terima kasih banyak, Pak. Sesi bimbingan ini sangat membuka wawasan saya." }
+    ],
+    '0903058212608': [
+        { dosen: 'Iman Saladin, S.Kom., M.M.S.I.', keperluan: 'Diskusi Proyek Kelas RPL', jadwal: '25 Juli 2025, 09:30', status: 'Disetujui' },
+        { dosen: 'Dr. Ir. Ahmad Heryanto, M.T.', keperluan: 'Minta Tanda Tangan KRS', jadwal: '23 Juli 2025, 14:00', status: 'Ditolak', alasanTolak: 'Untuk tanda tangan KRS silakan temui saya langsung di ruangan pada jam kerja, tidak perlu melalui sistem.' },
+        { dosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.', keperluan: 'Diskusi topik penelitian', jadwal: '21 Juli 2025, 11:00', status: 'Selesai' }
+    ],
+    '09030582126015': [
+        { dosen: 'Prof. Siti Nurmaini, M.T.', keperluan: 'Bimbingan Akademik (PA)', jadwal: '24 Juli 2025, 13:00', status: 'Disetujui' },
+        { dosen: 'Prof. Siti Nurmaini, M.T.', keperluan: 'Konsultasi Proposal', jadwal: '15 Juli 2025, 09:00', status: 'Selesai', feedback: "Sangat membantu, Bu. Terima kasih telah meluangkan waktu." }
+    ],
+    '09030582327001': [ // Andi Wijaya
+        { dosen: 'Budi Santoso, S.T., M.Eng.', keperluan: 'Bimbingan Proyek IoT', jadwal: '22 Juli 2025, 14:00', status: 'Disetujui' },
+        { dosen: 'Dr. Retno Lestari, M.Kom.', keperluan: 'Konsultasi Machine Learning', jadwal: '16 Juli 2025, 09:00', status: 'Selesai', feedback: "Penjelasan sangat detail dan mudah dipahami." }
+    ],
+    '09030582327002': [ // Citra Lestari
+        { dosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.', keperluan: 'Validasi Kuesioner Penelitian', jadwal: '23 Juli 2025, 11:00', status: 'Menunggu' },
+        { dosen: 'Budi Santoso, S.T., M.Eng.', keperluan: 'Tanya soal UAS Jaringan Komputer', jadwal: '24 Juli 2025, 10:30', status: 'Ditolak', alasanTolak: 'Mohon maaf, pertanyaan seputar UAS hanya dilayani pada sesi kelas tambahan.' }
+    ],
+    '09030582327003': [ // Eko Nugroho
+        { dosen: 'Prof. Siti Nurmaini, M.T.', keperluan: 'Diskusi Lomba Gemastik', jadwal: '22 Juli 2025, 09:30', status: 'Disetujui' },
+        { dosen: 'Iman Saladin, S.Kom., M.M.S.I.', keperluan: 'Revisi Laporan Magang', jadwal: '18 Juli 2025, 10:00', status: 'Selesai', feedback: "Feedback sudah diberikan secara lisan." }
+    ],
+    '09030582327004': [ // Fitriani Indah
+        { dosen: 'Dr. Ir. Ahmad Heryanto, M.T.', keperluan: 'Persiapan Seminar Proposal', jadwal: '23 Juli 2025, 14:30', status: 'Menunggu' }
+    ]
 };
+
+// --- DATA AWAL PERMINTAAN UNTUK SETIAP DOSEN ---
 const initialDosenData = {
-    '0022018703': [{ id: 1, mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Bimbingan Tugas Akhir - Bab 3', jadwal: 'Senin, 21 Juli 2025, 10:00 - 10:30', status: 'Disetujui', notifikasi: 'sudah_dilihat' }],
-    // ... data lainnya bisa ditambahkan
+    '0002085908': [ // Prof. Siti Nurmaini
+        { mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Konsultasi Kerja Praktik', jadwal: 'Selasa, 22 Juli 2025, 09:30', status: 'Menunggu' },
+        { mahasiswa: 'Eko Nugroho', nim: '09030582327003', keperluan: 'Diskusi Lomba Gemastik', jadwal: 'Selasa, 22 Juli 2025, 09:30', status: 'Disetujui' },
+        { mahasiswa: 'Wahyu Hidayat', nim: '09030582126015', keperluan: 'Bimbingan Akademik (PA)', jadwal: 'Kamis, 24 Juli 2025, 13:00', status: 'Disetujui' },
+        { mahasiswa: 'Wahyu Hidayat', nim: '09030582126015', keperluan: 'Konsultasi Proposal', jadwal: '15 Juli 2025, 09:00', status: 'Selesai', feedback: "Sangat membantu, Bu. Terima kasih telah meluangkan waktu." }
+    ],
+    '0022018703': [ // Dr. Ahmad Heryanto
+        { mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Bimbingan Tugas Akhir - Bab 3', jadwal: 'Senin, 21 Juli 2025, 10:00', status: 'Disetujui' },
+        { mahasiswa: 'Fitriani Indah', nim: '09030582327004', keperluan: 'Persiapan Seminar Proposal', jadwal: 'Rabu, 23 Juli 2025, 14:30', status: 'Menunggu' },
+        { mahasiswa: 'Rahayu Prasiska', nim: '0903058212608', keperluan: 'Minta Tanda Tangan KRS', jadwal: 'Rabu, 23 Juli 2025, 14:00', status: 'Ditolak', alasanTolak: 'Untuk tanda tangan KRS silakan temui saya langsung di ruangan pada jam kerja, tidak perlu melalui sistem.' },
+        { mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Bimbingan Tugas Akhir - Bab 2', jadwal: '14 Juli 2025, 10:00', status: 'Selesai', feedback: "Terima kasih banyak, Pak. Sesi bimbingan ini sangat membuka wawasan saya." }
+    ],
+    '0022108702': [ // Iman Saladin
+        { mahasiswa: 'Rahayu Prasiska', nim: '0903058212608', keperluan: 'Diskusi Proyek Kelas RPL', jadwal: 'Jumat, 25 Juli 2025, 09:30', status: 'Disetujui' },
+        { mahasiswa: 'Eko Nugroho', nim: '09030582327003', keperluan: 'Revisi Laporan Magang', jadwal: '18 Juli 2025, 10:00', status: 'Selesai', feedback: "Feedback sudah diberikan secara lisan." }
+    ],
+    '0011223301': [ // Dr. Retno Lestari
+        { mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Revisi Jurnal Internasional', jadwal: 'Senin, 21 Juli 2025, 13:00', status: 'Menunggu' },
+        { mahasiswa: 'Andi Wijaya', nim: '09030582327001', keperluan: 'Konsultasi Machine Learning', jadwal: '16 Juli 2025, 09:00', status: 'Selesai', feedback: "Penjelasan sangat detail dan mudah dipahami." }
+    ],
+    '0044556602': [ // Budi Santoso
+        { mahasiswa: 'Andi Wijaya', nim: '09030582327001', keperluan: 'Bimbingan Proyek IoT', jadwal: 'Selasa, 22 Juli 2025, 14:00', status: 'Disetujui' },
+        { mahasiswa: 'Citra Lestari', nim: '09030582327002', keperluan: 'Tanya soal UAS Jaringan Komputer', jadwal: 'Kamis, 24 Juli 2025, 10:30', status: 'Ditolak', alasanTolak: 'Mohon maaf, pertanyaan seputar UAS hanya dilayani pada sesi kelas tambahan.' }
+    ],
+    '0077889903': [ // Prof. Rina Marlina
+        { mahasiswa: 'Citra Lestari', nim: '09030582327002', keperluan: 'Validasi Kuesioner Penelitian', jadwal: 'Rabu, 23 Juli 2025, 11:00', status: 'Menunggu' },
+        { mahasiswa: 'Rahayu Prasiska', nim: '0903058212608', keperluan: 'Diskusi topik penelitian', jadwal: 'Senin, 21 Juli 2025, 11:00', status: 'Selesai' }
+    ]
 };
 
 
@@ -49,7 +125,7 @@ const initialDosenData = {
 // =================================================
 $(document).ready(function() {
 
-    // --- Fungsi untuk menangani proses login ---
+    // Fungsi untuk menangani proses login
     $('#login-form').on('submit', function(event) {
         event.preventDefault();
         const username = $('#inputUsername').val();
@@ -57,356 +133,360 @@ $(document).ready(function() {
         const user = users[username];
 
         if (user && user.password === password) {
-            localStorage.setItem('loggedInUser', JSON.stringify({ id: username, name: user.name, role: user.role }));
-            
-            // Inisialisasi data jika belum ada di localStorage
-            if (user.role === 'mahasiswa' && !localStorage.getItem(`pertemuan_${username}`)) {
-                 localStorage.setItem(`pertemuan_${username}`, JSON.stringify(initialMahasiswaData[username] || []));
-            } else if (user.role === 'dosen' && !localStorage.getItem(`permintaan_${username}`)) {
-                 localStorage.setItem(`permintaan_${username}`, JSON.stringify(initialDosenData[username] || []));
+            // Simpan data pengguna yang login ke session storage
+            sessionStorage.setItem('loggedInUser', JSON.stringify({ id: username, name: user.name, role: user.role }));
+            // Arahkan ke dashboard yang sesuai dengan peran (role)
+            if (user.role === 'dosen') {
+                window.location.href = 'dashboard-dosen.html';
+            } else {
+                window.location.href = 'dashboard-mahasiswa.html';
             }
-
-            window.location.href = user.role === 'dosen' ? 'dashboard-dosen.html' : 'dashboard-mahasiswa.html';
         } else {
+            // Tampilkan pesan error jika login gagal
             $('#login-alert').text('NIM/NIDN atau Password salah!').fadeIn();
         }
     });
 
-    // --- Logika Global untuk Pengguna yang Sudah Login ---
-    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    // Ambil data pengguna yang login dari session storage
+    const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
 
     if (loggedInUser) {
-        // Render Navbar Dinamis di semua halaman
-        renderNavbar(loggedInUser);
-
-        // ==========================================================
-        // === BAGIAN BARU: Logika untuk Dropdown Menu di Navbar ===
-        // ==========================================================
-        $('body').on('click', '.dropdown-trigger', function(event) {
-            event.stopPropagation(); // Mencegah event klik menyebar ke elemen document
-            $(this).parent('.dropdown').toggleClass('is-active');
-        });
-
-        // Menutup dropdown jika pengguna mengklik di luar area dropdown
-        $(document).on('click', function(event) {
-            if (!$(event.target).closest('.dropdown').length) {
-                $('.dropdown').removeClass('is-active');
-            }
-        });
-        // ==========================================================
-        // Logout
-        $('body').on('click', '.logout-link', function(e) {
-            // Kita tidak lagi memerlukan e.preventDefault() atau window.location.href
-            // Biarkan browser mengikuti href="index.html" secara alami
-            localStorage.removeItem('loggedInUser');
+        // Tampilkan nama pengguna dan siapkan fungsi logout
+        $('.user-name').text(loggedInUser.name);
+        $('.logout-link').on('click', function(e) {
+            e.preventDefault();
+            sessionStorage.clear(); // Hapus semua data dari session storage
+            window.location.href = 'index.html';
         });
     } else {
         // Jika tidak ada pengguna yang login, paksa kembali ke halaman login
-        const currentPage = window.location.pathname.split('/').pop();
-        if (currentPage !== 'index.html') {
+        // kecuali jika sudah di halaman login atau bantuan
+        const isPublicPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('bantuan.html');
+        if (!isPublicPage) {
             window.location.href = 'index.html';
         }
     }
-    
-    // =================================================
-    // --- BAGIAN BARU: FUNGSI-FUNGSI GLOBAL ---
-    // =================================================
-    
-    /**
-     * Membuat Navbar secara dinamis berdasarkan peran pengguna.
-     * @param {object} user - Objek pengguna yang sedang login.
-     */
-    function renderNavbar(user) {
-        const isMahasiswa = user.role === 'mahasiswa';
-        const theme = isMahasiswa ? 'blue' : 'green';
-        const pages = isMahasiswa ? 
-            [
-                { href: 'dashboard-mahasiswa.html', text: 'Dashboard' },
-                { href: 'jadwal-mahasiswa.html', text: 'Tambahkan Pertemuan' },
-                { href: 'riwayat-pertemuan-mahasiswa.html', text: 'Riwayat Pertemuan' }
-            ] : 
-            [
-                { href: 'dashboard-dosen.html', text: 'Dashboard' },
-                { href: 'kelola-jadwal-dosen.html', text: 'Kelola Ketersediaan' },
-                { href: 'permintaan-dosen.html', text: 'Permintaan Masuk' },
-                { href: 'pertemuan-selesai-dosen.html', text: 'Pertemuan Selesai' }
-            ];
-        
-        const currentPage = window.location.pathname.split('/').pop();
-        
-        let navLinks = '';
-        pages.forEach(page => {
-            const isActive = currentPage === page.href;
-            navLinks += `<a href="${page.href}" class="${isActive ? `text-white bg-${theme}-700` : `text-${theme}-200 hover:bg-${theme}-700 hover:text-white`} px-3 py-2 rounded-md text-sm font-medium ml-4">${page.text}</a>`;
-        });
 
-        // Cek notifikasi
-        let hasNotif = false;
-        const storageKey = isMahasiswa ? `pertemuan_${user.id}` : `permintaan_${user.id}`;
-        const data = JSON.parse(localStorage.getItem(storageKey)) || [];
-        if (data.some(item => item.notifikasi === 'belum_dilihat')) {
-            hasNotif = true;
-        }
-
-        const navbarHtml = `
-        <nav class="bg-${theme}-600 shadow-lg">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <img src="assets/img/logo.png" alt="Logo" class="h-8 w-8 mr-2">
-                        <a href="#" class="text-white font-bold text-xl">Penjadwalan Dosen</a>
-                    </div>
-                    <div class="flex items-center">
-                        ${navLinks}
-                        <div class="relative ml-4">
-                            <button class="text-${theme}-200 hover:text-white focus:outline-none">
-                                <i class="fas fa-bell"></i>
-                                ${hasNotif ? '<span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>' : ''}
-                            </button>
-                        </div>
-                        <div class="relative ml-4 dropdown">
-                            <button class="dropdown-trigger flex items-center text-white focus:outline-none">
-                                <span class="text-sm font-medium">${user.name}</span>
-                                <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                            </button>
-                            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
-                                <a href="profil.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
-                                <a href="index.html" class="logout-link block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>`;
-        
-        $('#navbar-container').html(navbarHtml);
-        // Menandai notifikasi sebagai sudah dilihat saat halaman dimuat
-        if(hasNotif) markNotificationsAsRead(user);
-    }
-
-    /**
-     * Menandai semua notifikasi 'belum_dilihat' menjadi 'sudah_dilihat'
-     * @param {object} user - Objek pengguna yang sedang login.
-     */
-    function markNotificationsAsRead(user) {
-        const storageKey = user.role === 'mahasiswa' ? `pertemuan_${user.id}` : `permintaan_${user.id}`;
-        let data = JSON.parse(localStorage.getItem(storageKey)) || [];
-        data.forEach(item => {
-            if (item.notifikasi === 'belum_dilihat') {
-                item.notifikasi = 'sudah_dilihat';
-            }
-        });
-        localStorage.setItem(storageKey, JSON.stringify(data));
-    }
-
-
-    // =================================================
-    // --- PENYESUAIAN HALAMAN MAHASISWA ---
-    // =================================================
+    // --- LOGIKA HALAMAN MAHASISWA ---
     if (loggedInUser && loggedInUser.role === 'mahasiswa') {
         const storageKey = `pertemuan_${loggedInUser.id}`;
-        let pertemuanMahasiswa = JSON.parse(localStorage.getItem(storageKey)) || [];
+        let pertemuanMahasiswa = JSON.parse(sessionStorage.getItem(storageKey));
 
-        // --- Logika Halaman Jadwal Mahasiswa (Validasi Slot) ---
-        if (window.location.pathname.endsWith('jadwal-mahasiswa.html')) {
-            const dosenSelect = $('#pilihDosen');
-            const jadwalContainer = $('#jadwal-container');
+        // Jika data pertemuan belum ada di session, ambil dari data awal
+        if (!pertemuanMahasiswa) {
+            pertemuanMahasiswa = initialMahasiswaData[loggedInUser.id] || [];
+            sessionStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
+        }
 
-            for (const nidn in users) {
-                if (users[nidn].role === 'dosen') {
-                    dosenSelect.append(`<option value="${nidn}" data-nama="${users[nidn].name}">${users[nidn].name}</option>`);
-                }
-            }
+        // Fungsi untuk merender tabel data pertemuan mahasiswa
+        function renderMahasiswaTable(tableBody, data) {
+            tableBody.empty();
+            if (data.length > 0) {
+                data.forEach((item, index) => {
+                    let statusOrAction;
+                    let rowClass = '';
 
-            dosenSelect.on('change', function() {
-                const selectedNidn = $(this).val();
-                jadwalContainer.empty().append('<p class="text-gray-500 w-full p-2">Memuat jadwal...</p>');
-
-                // Ambil semua permintaan yang sudah disetujui untuk dosen ini
-                const permintaanDosenKey = `permintaan_${selectedNidn}`;
-                const permintaanDosen = JSON.parse(localStorage.getItem(permintaanDosenKey)) || initialDosenData[selectedNidn] || [];
-                const jadwalDisetujui = permintaanDosen
-                    .filter(p => p.status === 'Disetujui')
-                    .map(p => p.jadwal.split(', ').slice(1).join(', ')); // Ambil bagian tanggal & jam saja
-                
-                setTimeout(() => { // Simulasi loading
-                    jadwalContainer.empty();
-                    if (selectedNidn && jadwalDosen[selectedNidn]) {
-                        jadwalDosen[selectedNidn].forEach(slot => {
-                            const jadwalText = `${slot.tanggal}, ${slot.jam}`;
-                            const isBooked = jadwalDisetujui.includes(jadwalText);
-                            const cardClass = isBooked ? 'bg-gray-200 border-gray-300 cursor-not-allowed' : 'bg-white border-gray-200 cursor-pointer hover:shadow-lg hover:border-blue-500';
-                            const cardHtml = `
-                            <div class="w-full md:w-1/2 lg:w-1/3 p-2">
-                                <div class="jadwal-card border p-4 text-center rounded-lg transition-all ${cardClass}" 
-                                     data-jadwal-full-text="${slot.hari}, ${jadwalText}" 
-                                     ${isBooked ? 'disabled' : ''}>
-                                    <h5 class="font-bold text-lg ${isBooked ? 'text-gray-500' : 'text-gray-800'}">${slot.hari}</h5>
-                                    <p class="text-sm ${isBooked ? 'text-gray-400' : 'text-gray-500'}">${slot.tanggal}</p>
-                                    <p class="font-semibold mt-2 ${isBooked ? 'text-gray-500' : 'text-blue-600'}">${slot.jam}</p>
-                                    ${isBooked ? '<span class="text-xs font-bold text-red-600 block mt-1">SUDAH DIPESAN</span>' : ''}
-                                </div>
-                            </div>`;
-                            jadwalContainer.append(cardHtml);
-                        });
-                    } else {
-                        jadwalContainer.html('<p class="text-gray-500 w-full p-2">Pilih dosen untuk melihat jadwal.</p>');
+                    // Tentukan tampilan status atau tombol aksi berdasarkan status pertemuan
+                    if (item.status === 'Disetujui') {
+                        statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>`;
+                    } else if (item.status === 'Ditolak') {
+                        // JIKA DITOLAK: Beri tombol untuk lihat alasan jika ada
+                        if (item.alasanTolak) {
+                            const safeAlasan = item.alasanTolak.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                            statusOrAction = `<button data-alasan="${safeAlasan}" class="btn-lihat-alasan bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs">Ditolak (Lihat Alasan)</button>`;
+                        } else {
+                            statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>`;
+                        }
+                    } else if (item.status === 'Selesai') {
+                        statusOrAction = `<button data-index="${index}" class="btn-feedback bg-purple-500 hover:bg-purple-600 text-white font-bold py-1 px-3 rounded text-xs">Beri Feedback</button>`;
+                    } else if (item.status === 'Feedback Diberikan') {
+                        statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Feedback Diberikan</span>`;
+                        rowClass = 'bg-purple-50';
+                    } else { // Menunggu
+                        statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>`;
                     }
-                }, 500);
-            });
-            
-            // Event listener untuk pengajuan form
-            $('#form-pengajuan').on('submit', function(event) {
-                event.preventDefault();
-                const keperluan = $('#keperluan').val();
-                const dosenSelectEl = $('#pilihDosen option:selected');
-                const dosenNidn = dosenSelectEl.val();
-                const dosenNama = dosenSelectEl.data('nama');
-                const jadwalText = $('.jadwal-card.active').data('jadwal-full-text');
 
-                if (!dosenNidn || !jadwalText || !keperluan) {
-                    alert('Harap lengkapi semua data: pilih dosen, pilih jadwal, dan isi keperluan.');
-                    return;
-                }
-                
-                const newId = Date.now(); // ID unik untuk pertemuan
-
-                // 1. Simpan di data mahasiswa
-                let pertemuanMhs = JSON.parse(localStorage.getItem(storageKey)) || [];
-                pertemuanMhs.push({ id: newId, dosen: dosenNama, dosenNidn: dosenNidn, keperluan: keperluan, jadwal: jadwalText, status: 'Menunggu', notifikasi: 'sudah_dilihat' });
-                localStorage.setItem(storageKey, JSON.stringify(pertemuanMhs));
-
-                // 2. Simpan di data dosen (untuk notifikasi)
-                const permintaanKey = `permintaan_${dosenNidn}`;
-                let permintaanDosen = JSON.parse(localStorage.getItem(permintaanKey)) || [];
-                permintaanDosen.push({ id: newId, mahasiswa: loggedInUser.name, nim: loggedInUser.id, keperluan: keperluan, jadwal: jadwalText, status: 'Menunggu', notifikasi: 'belum_dilihat' });
-                localStorage.setItem(permintaanKey, JSON.stringify(permintaanDosen));
-
-                $('#success-alert').text('Berhasil! Pengajuan pertemuan Anda telah terkirim.').fadeIn();
-                setTimeout(function() { window.location.href = "dashboard-mahasiswa.html"; }, 2000);
-            });
-
-            // Klik kartu jadwal
-            $('#jadwal-container').on('click', '.jadwal-card:not([disabled])', function() {
-                $('.jadwal-card').removeClass('active border-blue-500 shadow-lg');
-                $(this).addClass('active border-blue-500 shadow-lg');
-            });
-        }
-    }
-
-
-    // =================================================
-    // --- BAGIAN BARU: LOGIKA HALAMAN PROFIL ---
-    // =================================================
-    if (window.location.pathname.endsWith('profil.html')) {
-        if(loggedInUser) {
-            const userDetails = users[loggedInUser.id];
-            $('#profile-name').text(userDetails.name);
-            $('#profile-role').text(userDetails.role);
-            $('#profile-id').text(loggedInUser.id);
-            $('#profile-email').text(userDetails.email);
-
-            if(userDetails.role === 'mahasiswa') {
-                $('#profile-id-label').text('NIM');
-                $('#profile-extra-label').text('Jurusan');
-                $('#profile-extra-value').text(userDetails.jurusan);
+                    const rowHtml = `<tr class="${rowClass}"><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${index + 1}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.dosen}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.keperluan}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.jadwal}</td><td class="px-6 py-4 whitespace-nowrap">${statusOrAction}</td></tr>`;
+                    tableBody.append(rowHtml);
+                });
             } else {
-                $('#profile-id-label').text('NIDN');
-                $('#profile-extra-label').text('Bidang Keahlian');
-                $('#profile-extra-value').text(userDetails.bidangKeahlian);
+                tableBody.append(`<tr><td colspan="5" class="text-center text-gray-500 py-4">Tidak ada data pertemuan.</td></tr>`);
+            }
+        }
+
+        // Logika untuk halaman dashboard mahasiswa
+        if (window.location.pathname.endsWith('dashboard-mahasiswa.html')) {
+            const pertemuanAktif = pertemuanMahasiswa.filter(p => p.status === 'Disetujui' || p.status === 'Menunggu');
+            renderMahasiswaTable($('#jadwal-table-body'), pertemuanAktif);
+
+            // Logika untuk menampilkan notifikasi
+            const notificationKey = `notification_for_${loggedInUser.id}`;
+            const notificationMessage = sessionStorage.getItem(notificationKey);
+
+            if (notificationMessage) {
+                $('#notification-message').text(notificationMessage);
+                $('#notification-toast').fadeIn().removeClass('hidden');
+                sessionStorage.removeItem(notificationKey);
+                setTimeout(() => { $('#notification-toast').fadeOut(); }, 7000);
             }
 
-            // Demo button
-            $('.bg-gray-600').on('click', function() {
-                alert('Fitur ini akan tersedia pada versi aplikasi selanjutnya!');
+            $('#notification-close-btn').on('click', function() {
+                $('#notification-toast').fadeOut();
+            });
+        }
+
+        // Logika untuk halaman riwayat pertemuan mahasiswa
+        if (window.location.pathname.endsWith('riwayat-pertemuan-mahasiswa.html')) {
+            const riwayatTableBody = $('#riwayat-table-body');
+            renderMahasiswaTable(riwayatTableBody, pertemuanMahasiswa);
+
+            riwayatTableBody.on('click', '.btn-feedback', function() {
+                const index = $(this).data('index');
+                $('#feedback-form').data('index', index);
+                $('#give-feedback-modal').removeClass('hidden');
+            });
+
+            riwayatTableBody.on('click', '.btn-lihat-alasan', function() {
+                const alasan = $(this).data('alasan');
+                $('#alasan-content').text(alasan);
+                $('#lihat-alasan-modal').removeClass('hidden');
+            });
+
+            $('.close-lihat-alasan-modal').on('click', function() {
+                $('#lihat-alasan-modal').addClass('hidden');
             });
         }
     }
 
+    // Event listener untuk form pengiriman feedback
+    $('#feedback-form').on('submit', function(event) {
+        event.preventDefault();
+        const index = $(this).data('index');
+        const feedbackText = $('#feedback-textarea').val();
+        const storageKey = `pertemuan_${loggedInUser.id}`;
+        let pertemuanMahasiswa = JSON.parse(sessionStorage.getItem(storageKey));
 
-    // =================================================
-    // --- PENYESUAIAN HALAMAN DOSEN ---
-    // =================================================
+        if (feedbackText) {
+            pertemuanMahasiswa[index].status = 'Feedback Diberikan';
+            pertemuanMahasiswa[index].feedback = feedbackText;
+            sessionStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
+
+            $('#give-feedback-modal').addClass('hidden');
+            $(this)[0].reset();
+
+            if (window.location.pathname.endsWith('riwayat-pertemuan-mahasiswa.html')) {
+                renderMahasiswaTable($('#riwayat-table-body'), pertemuanMahasiswa);
+            }
+        }
+    });
+
+    $('.close-feedback-modal').on('click', function() {
+        $('#give-feedback-modal').addClass('hidden');
+        $('#feedback-form')[0].reset();
+    });
+
+    // --- LOGIKA HALAMAN AJUKAN PERTEMUAN ---
+    if (window.location.pathname.endsWith('jadwal-mahasiswa.html')) {
+        const dosenSelect = $('#pilihDosen');
+        const jadwalContainer = $('#jadwal-container');
+
+        for (const nidn in users) {
+            if (users[nidn].role === 'dosen') {
+                dosenSelect.append(`<option value="${nidn}" data-nama="${users[nidn].name}">${users[nidn].name}</option>`);
+            }
+        }
+
+        dosenSelect.on('change', function() {
+            const selectedNidn = $(this).val();
+            jadwalContainer.empty();
+            if (selectedNidn && jadwalDosen[selectedNidn]) {
+                jadwalDosen[selectedNidn].forEach(slot => {
+                    const cardHtml = `<div class="w-full md:w-1/2 lg:w-1/3 p-2"><div class="jadwal-card bg-white rounded-lg border border-gray-200 p-4 text-center cursor-pointer hover:shadow-lg hover:border-blue-500 transition-all" data-jadwal-text="${slot.hari}, ${slot.tanggal}, ${slot.jam}"><h5 class="font-bold text-lg text-gray-800">${slot.hari}</h5><p class="text-gray-500 text-sm">${slot.tanggal}</p><p class="font-semibold text-blue-600 mt-2">${slot.jam}</p></div></div>`;
+                    jadwalContainer.append(cardHtml);
+                });
+            } else {
+                jadwalContainer.html('<p class="text-gray-500 w-full p-2">Pilih dosen untuk melihat jadwal yang tersedia.</p>');
+            }
+        });
+
+        $('#jadwal-container').on('click', '.jadwal-card', function() {
+            $('.jadwal-card').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $('#form-pengajuan').on('submit', function(event) {
+            event.preventDefault();
+            const keperluan = $('#keperluan').val();
+            const dosenNama = $('#pilihDosen option:selected').data('nama');
+            const jadwalText = $('.jadwal-card.active').data('jadwal-text');
+            if (!dosenNama || !jadwalText || !keperluan) {
+                alert('Harap lengkapi semua data: pilih dosen, pilih jadwal, dan isi keperluan.');
+                return;
+            }
+            const storageKey = `pertemuan_${loggedInUser.id}`;
+            let pertemuanMahasiswa = JSON.parse(sessionStorage.getItem(storageKey)) || [];
+            pertemuanMahasiswa.push({ dosen: dosenNama, keperluan: keperluan, jadwal: jadwalText, status: 'Menunggu' });
+            sessionStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
+            $('#success-alert').text('Berhasil! Pengajuan pertemuan Anda telah terkirim.').fadeIn();
+            setTimeout(function() { window.location.href = "dashboard-mahasiswa.html"; }, 2000);
+        });
+    }
+
+    // --- LOGIKA UNTUK SEMUA HALAMAN DOSEN ---
     if (loggedInUser && loggedInUser.role === 'dosen') {
         const storageKey = `permintaan_${loggedInUser.id}`;
+        let permintaan = JSON.parse(sessionStorage.getItem(storageKey));
 
-        // --- Logika halaman daftar permintaan dosen ---
+        if (!permintaan) {
+            permintaan = initialDosenData[loggedInUser.id] || [];
+            sessionStorage.setItem(storageKey, JSON.stringify(permintaan));
+        }
+
+        if (window.location.pathname.endsWith('dashboard-dosen.html')) {
+            const permintaanBaruCount = permintaan.filter(p => p.status === 'Menunggu').length;
+            const jadwalDisetujuiCount = permintaan.filter(p => p.status === 'Disetujui').length;
+            const pertemuanSelesaiCount = permintaan.filter(p => p.status === 'Selesai' || p.status === 'Feedback Diberikan').length;
+
+            $('#permintaan-baru-count').text(permintaanBaruCount);
+            $('#total-disetujui-count').text(jadwalDisetujuiCount);
+            $('#pertemuan-selesai-count').text(pertemuanSelesaiCount);
+
+            const tableBody = $('#permintaan-terbaru-body');
+            tableBody.empty();
+            const permintaanMenunggu = permintaan.filter(p => p.status === 'Menunggu').slice(0, 5);
+            if (permintaanMenunggu.length > 0) {
+                permintaanMenunggu.forEach(item => {
+                    const rowHtml = `<tr><td class="px-6 py-4">${item.mahasiswa} (${item.nim})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4 text-center"><a href="permintaan-dosen.html" class="text-blue-600 hover:text-blue-900 font-medium">Lihat Detail</a></td></tr>`;
+                    tableBody.append(rowHtml);
+                });
+            } else {
+                tableBody.append(`<tr><td colspan="3" class="text-center text-gray-500 py-4">Tidak ada permintaan baru.</td></tr>`);
+            }
+        }
+
         if (window.location.pathname.endsWith('permintaan-dosen.html')) {
             const tableBody = $('#permintaan-table-body');
-            
-            function renderPermintaanTable() {
-                let permintaan = JSON.parse(localStorage.getItem(storageKey)) || [];
+            const totalPermintaanSpan = $('#total-permintaan');
+
+            function renderTable() {
                 tableBody.empty();
-                $('#total-permintaan').text(`Total: ${permintaan.length} Permintaan`);
+                const permintaanMenunggu = permintaan.filter(p => p.status === 'Menunggu');
+                totalPermintaanSpan.text(`Total: ${permintaanMenunggu.length} Permintaan Menunggu`);
 
-                if (permintaan.length === 0) {
-                    tableBody.append(`<tr><td colspan="4" class="text-center text-gray-500 py-4">Tidak ada permintaan.</td></tr>`);
-                    return;
-                }
-
-                permintaan.forEach(item => {
+                permintaan.forEach((item, index) => {
                     let statusOrAction;
-                    if (item.status === 'Menunggu') {
-                        statusOrAction = `<div class="action-buttons space-x-2">
-                            <button data-id="${item.id}" class="btn-aksi btn-setujui bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded text-xs">Setujui</button>
-                            <button data-id="${item.id}" class="btn-aksi btn-tolak bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs">Tolak</button>
-                        </div>`;
-                    } // ... (kode lainnya tetap sama)
-                    else if (item.status === 'Disetujui') {
-                         statusOrAction = `<button data-id="${item.id}" class="btn-aksi btn-selesaikan bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs">Selesaikan</button>`;
-                    } else {
-                         statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">${item.status}</span>`;
+                    let rowClass = '';
+
+                    if (item.status === 'Disetujui') {
+                        statusOrAction = `<div class="action-buttons"><button data-index="${index}" class="btn-selesaikan bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs">Selesaikan</button></div>`;
+                        rowClass = 'bg-green-50';
+                    } else if (item.status === 'Ditolak') {
+                        statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>`;
+                        rowClass = 'bg-red-50';
+                    } else if (item.status === 'Selesai' || item.status === 'Feedback Diberikan') {
+                        statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Selesai</span>`;
+                        rowClass = 'bg-gray-100';
+                    } else { // Menunggu
+                        statusOrAction = `<div class="action-buttons space-x-2"><button data-index="${index}" class="btn-setujui bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded text-xs">Setujui</button><button data-index="${index}" class="btn-tolak bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs">Tolak</button></div>`;
                     }
-                    
-                    const rowHtml = `<tr><td class="px-6 py-4">${item.mahasiswa} (${item.nim})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4">${item.jadwal}</td><td class="px-6 py-4 text-center">${statusOrAction}</td></tr>`;
+
+                    const rowHtml = `<tr class="${rowClass}"><td class="px-6 py-4">${item.mahasiswa} (${item.nim})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4">${item.jadwal}</td><td class="px-6 py-4 text-center">${statusOrAction}</td></tr>`;
                     tableBody.append(rowHtml);
                 });
             }
 
-            renderPermintaanTable();
+            renderTable();
 
-            tableBody.on('click', '.btn-aksi', function() {
-                const itemId = $(this).data('id');
-                const action = $(this).hasClass('btn-setujui') ? 'Disetujui' : $(this).hasClass('btn-tolak') ? 'Ditolak' : 'Selesai';
+            tableBody.on('click', '.btn-setujui, .btn-selesaikan', function() {
+                const index = $(this).data('index');
+                const nimMahasiswa = permintaan[index].nim;
+                let message = '';
 
-                // 1. Update data permintaan di sisi dosen
-                let permintaan = JSON.parse(localStorage.getItem(storageKey));
-                const itemIndex = permintaan.findIndex(p => p.id === itemId);
-                permintaan[itemIndex].status = action;
-                localStorage.setItem(storageKey, JSON.stringify(permintaan));
-
-                // 2. Update data pertemuan di sisi mahasiswa & kirim notifikasi
-                const nimMahasiswa = permintaan[itemIndex].nim;
-                const pertemuanMhsKey = `pertemuan_${nimMahasiswa}`;
-                let pertemuanMhs = JSON.parse(localStorage.getItem(pertemuanMhsKey)) || [];
-                const pertemuanIndex = pertemuanMhs.findIndex(p => p.id === itemId);
-                if (pertemuanIndex > -1) {
-                    pertemuanMhs[pertemuanIndex].status = action;
-                    pertemuanMhs[pertemuanIndex].notifikasi = 'belum_dilihat'; // Set notifikasi
-                    localStorage.setItem(pertemuanMhsKey, JSON.stringify(pertemuanMhs));
+                if ($(this).hasClass('btn-setujui')) {
+                    permintaan[index].status = 'Disetujui';
+                    message = 'Satu permintaan pertemuan Anda telah disetujui.';
+                } else if ($(this).hasClass('btn-selesaikan')) {
+                    permintaan[index].status = 'Selesai';
+                    message = 'Satu pertemuan Anda telah ditandai selesai oleh dosen.';
                 }
-                
-                renderPermintaanTable(); // Render ulang tabel
+
+                if (message) {
+                    sessionStorage.setItem(`notification_for_${nimMahasiswa}`, message);
+                }
+                sessionStorage.setItem(storageKey, JSON.stringify(permintaan));
+                renderTable();
             });
+
+            tableBody.on('click', '.btn-tolak', function() {
+                const index = $(this).data('index');
+                $('#form-alasan-tolak').data('index', index);
+                $('#tolak-alasan-modal').removeClass('hidden');
+            });
+
+            $('#form-alasan-tolak').on('submit', function(e) {
+                e.preventDefault();
+                const index = $(this).data('index');
+                const alasan = $('#alasan-tolak-textarea').val();
+                const nimMahasiswa = permintaan[index].nim;
+
+                permintaan[index].status = 'Ditolak';
+                permintaan[index].alasanTolak = alasan;
+
+                const message = 'Satu permintaan pertemuan Anda telah ditolak.';
+                sessionStorage.setItem(`notification_for_${nimMahasiswa}`, message);
+                
+                sessionStorage.setItem(storageKey, JSON.stringify(permintaan));
+                
+                $('#tolak-alasan-modal').addClass('hidden');
+                $(this)[0].reset();
+                
+                renderTable();
+            });
+
+            $('.close-tolak-modal').on('click', function() {
+                $('#tolak-alasan-modal').addClass('hidden');
+                $('#form-alasan-tolak')[0].reset();
+            });
+        }
+
+        if (window.location.pathname.endsWith('pertemuan-selesai-dosen.html')) {
+            const tableBody = $('#selesai-table-body');
+            tableBody.empty();
+            const dataSelesai = permintaan.filter(p => p.status === 'Selesai' || p.status === 'Feedback Diberikan');
+            if (dataSelesai.length > 0) {
+                dataSelesai.forEach(item => {
+                    let feedbackCell;
+                    if (item.feedback) {
+                        const safeFeedback = item.feedback.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                        feedbackCell = `<button data-feedback="${safeFeedback}" class="btn-lihat-feedback bg-purple-500 hover:bg-purple-600 text-white font-bold py-1 px-3 rounded text-xs">Lihat Feedback</button>`;
+                    } else {
+                        feedbackCell = `<span class="text-gray-400 text-xs italic">Belum ada</span>`;
+                    }
+                    const rowHtml = `<tr><td class="px-6 py-4">${item.mahasiswa} (${item.nim})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4">${item.jadwal}</td><td class="px-6 py-4 text-center">${feedbackCell}</td></tr>`;
+                    tableBody.append(rowHtml);
+                });
+
+                $('.btn-lihat-feedback').on('click', function() {
+                    const feedbackText = $(this).data('feedback');
+                    $('#feedback-content').text(feedbackText);
+                    $('#feedback-modal').removeClass('hidden');
+                });
+
+            } else {
+                tableBody.append(`<tr><td colspan="4" class="text-center text-gray-500 py-4">Belum ada pertemuan yang selesai.</td></tr>`);
+            }
         }
     }
 
-    // Sisa kode dari file asli (dashboard, riwayat, dll.) akan berfungsi
-    // dengan perubahan dari sessionStorage ke localStorage.
-    // Pastikan untuk menyesuaikan bagian render tabel agar mengambil data dari localStorage.
-    // Contoh untuk dashboard dosen:
-    if (window.location.pathname.endsWith('dashboard-dosen.html') && loggedInUser && loggedInUser.role === 'dosen') {
-        const permintaan = JSON.parse(localStorage.getItem(`permintaan_${loggedInUser.id}`)) || [];
-        const permintaanBaruCount = permintaan.filter(p => p.status === 'Menunggu').length;
-        const jadwalDisetujuiCount = permintaan.filter(p => p.status === 'Disetujui').length;
-        const pertemuanSelesaiCount = permintaan.filter(p => p.status === 'Selesai' || p.status === 'Ditolak' || p.status === 'Feedback Diberikan').length;
+    $('.close-modal').on('click', function() {
+        $('#feedback-modal').addClass('hidden');
+    });
 
-        $('#permintaan-baru-count').text(permintaanBaruCount);
-        $('#total-disetujui-count').text(jadwalDisetujuiCount);
-        $('#pertemuan-selesai-count').text(pertemuanSelesaiCount);
+    if (window.location.pathname.endsWith('profil-mahasiswa.html') || window.location.pathname.endsWith('profil-dosen.html')) {
+        if (loggedInUser) {
+            $('#profile-name').text(loggedInUser.name);
+            $('#profile-id').text(loggedInUser.id);
+            $('#profile-role').text(loggedInUser.role);
+        }
     }
-
-    // (Tambahkan logika render untuk halaman-halaman lain jika diperlukan,
-    // mengikuti pola penggunaan localStorage di atas)
-
 });

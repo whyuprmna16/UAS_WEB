@@ -6,29 +6,37 @@
     <title>Permintaan Masuk - Sistem Penjadwalan Dosen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style> 
-        body { font-family: 'Poppins', sans-serif; } 
-        /* Diperbarui: Styling untuk dropdown menu agar muncul saat di-hover */
-        .dropdown.is-active .dropdown-menu {
-            display: block;
-        }
-    </style>
+    <style> body { font-family: 'Poppins', sans-serif; } </style>
 </head>
 <body class="bg-gray-100">
 
-    <div id="navbar-container"></div>
+    <nav class="bg-green-600 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <img src="assets/img/logo.png" alt="Logo" class="h-8 w-8 mr-2">
+                    <a href="dashboard-dosen.html" class="text-white font-bold text-xl">Penjadwalan Dosen</a>
+                </div>
+                <div class="flex items-center">
+                    <a href="dashboard-dosen.html" class="text-green-200 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                    <a href="kelola-jadwal-dosen.html" class="text-green-200 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Kelola Ketersediaan</a>
+                    <a href="permintaan-dosen.html" class="text-white bg-green-700 px-3 py-2 rounded-md text-sm font-medium ml-4">Permintaan Masuk</a>
+                    <a href="pertemuan-selesai-dosen.html" class="text-green-200 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Pertemuan Selesai</a>
+                    <a href="profil-dosen.html" class="text-green-200 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Profil Saya</a>
+                    <a href="bantuan.html" class="text-green-200 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Bantuan</a>
+                    <a href="#" class="logout-link text-green-200 hover:bg-green-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-3xl font-bold text-gray-800">Daftar Permintaan Pertemuan</h3>
             <span id="total-permintaan" class="px-3 py-1 text-sm font-semibold text-blue-800 bg-blue-100 rounded-full">Total: 0 Permintaan</span>
         </div>
-        
-        <div id="action-alert" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-md" role="alert" style="display: none;">
-            </div>
-
-        <div class="bg-white shadow-lg overflow-hidden sm:rounded-lg">
+        <div id="action-alert" class="alert" role="alert" style="display: none;"></div>
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -44,118 +52,28 @@
         </div>
     </main>
 
+    <div id="tolak-alasan-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
+            <form id="form-alasan-tolak">
+                <div class="mt-3">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 text-center">Berikan Alasan Penolakan</h3>
+                    <div class="mt-4">
+                        <label for="alasan-tolak-textarea" class="block text-sm font-medium text-gray-700">Tuliskan alasan mengapa permintaan ini ditolak:</label>
+                        <textarea id="alasan-tolak-textarea" rows="4" required class="mt-1 shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border border-gray-300 rounded-md" placeholder="Contoh: Maaf, jadwal saya pada waktu tersebut sudah terisi untuk kegiatan lain..."></textarea>
+                    </div>
+                    <div class="items-center px-4 py-3 mt-4 bg-gray-50 rounded-b-md flex justify-end space-x-4">
+                        <button type="button" class="close-tolak-modal px-4 py-2 bg-gray-200 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-300 focus:outline-none">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-red-600 focus:outline-none">
+                            Tolak & Kirim Alasan
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="assets/js/main.js"></script>
-    <script>
-        $(document).ready(function() {
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            if (!loggedInUser || loggedInUser.role !== 'dosen') return;
-            
-            const storageKey = `permintaan_${loggedInUser.id}`;
-
-            function showAlert(message) {
-                const alertBox = $('#action-alert');
-                alertBox.text(message).fadeIn();
-                setTimeout(() => {
-                    alertBox.fadeOut();
-                }, 3000);
-            }
-
-            function renderPermintaanTable() {
-                const requests = JSON.parse(localStorage.getItem(storageKey)) || [];
-                const tableBody = $('#permintaan-table-body');
-                
-                $('#total-permintaan').text(`Total: ${requests.length} Permintaan`);
-                tableBody.empty();
-
-                if (requests.length === 0) {
-                    tableBody.append(`<tr><td colspan="4" class="text-center text-gray-500 py-6">Tidak ada permintaan masuk.</td></tr>`);
-                    return;
-                }
-
-                // Urutkan permintaan agar yang 'Menunggu' selalu di atas
-                requests.sort((a, b) => {
-                    if (a.status === 'Menunggu' && b.status !== 'Menunggu') return -1;
-                    if (a.status !== 'Menunggu' && b.status === 'Menunggu') return 1;
-                    return 0;
-                });
-
-                requests.forEach(item => {
-                    let statusOrAction;
-                    let rowClass = '';
-
-                    switch (item.status) {
-                        case 'Menunggu':
-                            statusOrAction = `
-                                <div class="action-buttons flex justify-center space-x-2">
-                                    <button data-id="${item.id}" class="btn-aksi btn-setujui bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded text-xs">Setujui</button>
-                                    <button data-id="${item.id}" class="btn-aksi btn-tolak bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs">Tolak</button>
-                                </div>`;
-                            break;
-                        case 'Disetujui':
-                            statusOrAction = `<button data-id="${item.id}" class="btn-aksi btn-selesaikan bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs">Selesaikan</button>`;
-                            rowClass = 'bg-green-50';
-                            break;
-                        case 'Ditolak':
-                            statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>`;
-                            rowClass = 'bg-red-50';
-                            break;
-                        case 'Selesai':
-                            statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-200 text-gray-800">Selesai</span>`;
-                            rowClass = 'bg-gray-50';
-                            break;
-                        case 'Feedback Diberikan':
-                             statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Selesai (Ada Feedback)</span>`;
-                            rowClass = 'bg-purple-50';
-                             break;
-                    }
-
-                    const rowHtml = `
-                    <tr class="${rowClass}">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.mahasiswa} (${item.nim})</td>
-                        <td class="px-6 py-4 text-sm text-gray-500">${item.keperluan}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.jadwal}</td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">${statusOrAction}</td>
-                    </tr>`;
-                    tableBody.append(rowHtml);
-                });
-            }
-
-            renderPermintaanTable();
-
-            // Handle klik tombol aksi
-            $('#permintaan-table-body').on('click', '.btn-aksi', function() {
-                const itemId = Number($(this).data('id'));
-                let newStatus;
-                if ($(this).hasClass('btn-setujui')) newStatus = 'Disetujui';
-                else if ($(this).hasClass('btn-tolak')) newStatus = 'Ditolak';
-                else if ($(this).hasClass('btn-selesaikan')) newStatus = 'Selesai';
-                
-                if (!newStatus) return;
-
-                // 1. Update data di sisi dosen
-                let requests = JSON.parse(localStorage.getItem(storageKey));
-                const requestItem = requests.find(p => p.id === itemId);
-                if (requestItem) {
-                    requestItem.status = newStatus;
-                    localStorage.setItem(storageKey, JSON.stringify(requests));
-                }
-
-                // 2. Update data di sisi mahasiswa & kirim notifikasi
-                const nimMahasiswa = requestItem.nim;
-                const pertemuanMhsKey = `pertemuan_${nimMahasiswa}`;
-                let pertemuanMhs = JSON.parse(localStorage.getItem(pertemuanMhsKey)) || [];
-                const pertemuanItem = pertemuanMhs.find(p => p.id === itemId);
-                if (pertemuanItem) {
-                    pertemuanItem.status = newStatus;
-                    pertemuanItem.notifikasi = 'belum_dilihat'; // Set notifikasi untuk mahasiswa
-                    localStorage.setItem(pertemuanMhsKey, JSON.stringify(pertemuanMhs));
-                }
-                
-                showAlert(`Permintaan berhasil diubah menjadi: ${newStatus}`);
-                renderPermintaanTable();
-            });
-        });
-    </script>
 </body>
 </html>
