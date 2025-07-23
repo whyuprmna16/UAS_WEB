@@ -14,7 +14,7 @@ const users = {
     '0077889903': { name: 'Prof. Dr. Ir. Rina Marlina, M.Sc.', password: '123456', role: 'dosen' },
     
     // Data Mahasiswa
-    '09030582226053': { name: 'Wahyu Pramana', password: '123456', role: 'mahasiswa' },
+    '09030582226003': { name: 'Wahyu Pramana', password: '123456', role: 'mahasiswa' },
     '0903058212608': { name: 'Rahayu Prasiska', password: '123456', role: 'mahasiswa' },
     '09030582126015': { name: 'Wahyu Hidayat', password: '123456', role: 'mahasiswa' },
     '09030582327001': { name: 'Andi Wijaya', password: '123456', role: 'mahasiswa' },
@@ -62,7 +62,7 @@ const initialSemuaPertemuan = [
     {
         idPertemuan: 1,
         idDosen: '0002085908', namaDosen: 'Prof. Siti Nurmaini, M.T.',
-        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        idMahasiswa: '09030582226003', namaMahasiswa: 'Wahyu Pramana',
         keperluan: 'Konsultasi Kerja Praktik', jadwal: 'Selasa, 22 Juli 2025, 09:30',
         status: 'Disetujui', feedback: null, alasanTolak: null
     },
@@ -113,7 +113,7 @@ const initialSemuaPertemuan = [
     {
         idPertemuan: 8,
         idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
-        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        idMahasiswa: '09030582226003', namaMahasiswa: 'Wahyu Pramana',
         keperluan: 'Bimbingan Tugas Akhir - Bab 3', jadwal: 'Senin, 21 Juli 2025, 10:00',
         status: 'Disetujui', feedback: null, alasanTolak: null
     },
@@ -134,7 +134,7 @@ const initialSemuaPertemuan = [
     {
         idPertemuan: 11,
         idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
-        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        idMahasiswa: '09030582226003', namaMahasiswa: 'Wahyu Pramana',
         keperluan: 'Bimbingan Tugas Akhir - Bab 2', jadwal: '14 Juli 2025, 10:00',
         status: 'Selesai', feedback: "Terima kasih banyak, Pak. Sesi bimbingan ini sangat membuka wawasan saya.", alasanTolak: null
     },
@@ -155,7 +155,7 @@ const initialSemuaPertemuan = [
      {
         idPertemuan: 14,
         idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
-        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        idMahasiswa: '09030582226003', namaMahasiswa: 'Wahyu Pramana',
         keperluan: 'Bimbingan Tugas Akhir - Bab 1', jadwal: '7 Juli 2025, 10:00',
         status: 'Feedback Diberikan', feedback: "Sudah oke, lanjutkan ke Bab 2.", alasanTolak: null
     },
@@ -199,7 +199,7 @@ const initialSemuaPertemuan = [
     {
         idPertemuan: 20,
         idDosen: '0022108702', namaDosen: 'Iman Saladin, S.Kom., M.M.S.I.',
-        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        idMahasiswa: '09030582226003', namaMahasiswa: 'Wahyu Pramana',
         keperluan: 'Pengesahan Laporan KP', jadwal: '11 Juli 2025, 10:00',
         status: 'Feedback Diberikan', feedback: 'Laporan sudah disahkan.', alasanTolak: null
     },
@@ -208,7 +208,7 @@ const initialSemuaPertemuan = [
     {
         idPertemuan: 21,
         idDosen: '0011223301', namaDosen: 'Dr. Retno Lestari, M.Kom.',
-        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        idMahasiswa: '09030582226003', namaMahasiswa: 'Wahyu Pramana',
         keperluan: 'Revisi Jurnal Internasional', jadwal: 'Senin, 21 Juli 2025, 13:00',
         status: 'Menunggu', feedback: null, alasanTolak: null
     },
@@ -330,7 +330,7 @@ const initialSemuaPertemuan = [
     {
         idPertemuan: 38,
         idDosen: '0077889903', namaDosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.',
-        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        idMahasiswa: '09030582226003', namaMahasiswa: 'Wahyu Pramana',
         keperluan: 'Bimbingan Kualitatif', jadwal: '14 Juli 2025, 11:00',
         status: 'Feedback Diberikan', feedback: 'Metode sudah tepat.', alasanTolak: null
     }
