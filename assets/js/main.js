@@ -134,7 +134,7 @@ $(document).ready(function() {
 
         if (user && user.password === password) {
             // Simpan data pengguna yang login ke session storage
-            sessionStorage.setItem('loggedInUser', JSON.stringify({ id: username, name: user.name, role: user.role }));
+            localStorage.setItem('loggedInUser', JSON.stringify({ id: username, name: user.name, role: user.role }));
             // Arahkan ke dashboard yang sesuai dengan peran (role)
             if (user.role === 'dosen') {
                 window.location.href = 'dashboard-dosen.html';
@@ -148,14 +148,14 @@ $(document).ready(function() {
     });
 
     // Ambil data pengguna yang login dari session storage
-    const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
     if (loggedInUser) {
         // Tampilkan nama pengguna dan siapkan fungsi logout
         $('.user-name').text(loggedInUser.name);
         $('.logout-link').on('click', function(e) {
             e.preventDefault();
-            sessionStorage.clear(); // Hapus semua data dari session storage
+            localStorage.clear(); // Hapus semua data dari session storage
             window.location.href = 'index.html';
         });
     } else {
@@ -170,12 +170,12 @@ $(document).ready(function() {
     // --- LOGIKA HALAMAN MAHASISWA ---
     if (loggedInUser && loggedInUser.role === 'mahasiswa') {
         const storageKey = `pertemuan_${loggedInUser.id}`;
-        let pertemuanMahasiswa = JSON.parse(sessionStorage.getItem(storageKey));
+        let pertemuanMahasiswa = JSON.parse(localStorage.getItem(storageKey));
 
         // Jika data pertemuan belum ada di session, ambil dari data awal
         if (!pertemuanMahasiswa) {
             pertemuanMahasiswa = initialMahasiswaData[loggedInUser.id] || [];
-            sessionStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
+            localStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
         }
 
         // Fungsi untuk merender tabel data pertemuan mahasiswa
@@ -221,12 +221,12 @@ $(document).ready(function() {
 
             // Logika untuk menampilkan notifikasi
             const notificationKey = `notification_for_${loggedInUser.id}`;
-            const notificationMessage = sessionStorage.getItem(notificationKey);
+            const notificationMessage = localStorage.getItem(notificationKey);
 
             if (notificationMessage) {
                 $('#notification-message').text(notificationMessage);
                 $('#notification-toast').fadeIn().removeClass('hidden');
-                sessionStorage.removeItem(notificationKey);
+                localStorage.removeItem(notificationKey);
                 setTimeout(() => { $('#notification-toast').fadeOut(); }, 7000);
             }
 
@@ -264,12 +264,12 @@ $(document).ready(function() {
         const index = $(this).data('index');
         const feedbackText = $('#feedback-textarea').val();
         const storageKey = `pertemuan_${loggedInUser.id}`;
-        let pertemuanMahasiswa = JSON.parse(sessionStorage.getItem(storageKey));
+        let pertemuanMahasiswa = JSON.parse(localStorage.getItem(storageKey));
 
         if (feedbackText) {
             pertemuanMahasiswa[index].status = 'Feedback Diberikan';
             pertemuanMahasiswa[index].feedback = feedbackText;
-            sessionStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
+            localStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
 
             $('#give-feedback-modal').addClass('hidden');
             $(this)[0].reset();
@@ -324,9 +324,9 @@ $(document).ready(function() {
                 return;
             }
             const storageKey = `pertemuan_${loggedInUser.id}`;
-            let pertemuanMahasiswa = JSON.parse(sessionStorage.getItem(storageKey)) || [];
+            let pertemuanMahasiswa = JSON.parse(localStorage.getItem(storageKey)) || [];
             pertemuanMahasiswa.push({ dosen: dosenNama, keperluan: keperluan, jadwal: jadwalText, status: 'Menunggu' });
-            sessionStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
+            localStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
             $('#success-alert').text('Berhasil! Pengajuan pertemuan Anda telah terkirim.').fadeIn();
             setTimeout(function() { window.location.href = "dashboard-mahasiswa.html"; }, 2000);
         });
@@ -335,11 +335,11 @@ $(document).ready(function() {
     // --- LOGIKA UNTUK SEMUA HALAMAN DOSEN ---
     if (loggedInUser && loggedInUser.role === 'dosen') {
         const storageKey = `permintaan_${loggedInUser.id}`;
-        let permintaan = JSON.parse(sessionStorage.getItem(storageKey));
+        let permintaan = JSON.parse(localStorage.getItem(storageKey));
 
         if (!permintaan) {
             permintaan = initialDosenData[loggedInUser.id] || [];
-            sessionStorage.setItem(storageKey, JSON.stringify(permintaan));
+            localStorage.setItem(storageKey, JSON.stringify(permintaan));
         }
 
         if (window.location.pathname.endsWith('dashboard-dosen.html')) {
@@ -411,9 +411,9 @@ $(document).ready(function() {
                 }
 
                 if (message) {
-                    sessionStorage.setItem(`notification_for_${nimMahasiswa}`, message);
+                    localStorage.setItem(`notification_for_${nimMahasiswa}`, message);
                 }
-                sessionStorage.setItem(storageKey, JSON.stringify(permintaan));
+                localStorage.setItem(storageKey, JSON.stringify(permintaan));
                 renderTable();
             });
 
@@ -433,9 +433,9 @@ $(document).ready(function() {
                 permintaan[index].alasanTolak = alasan;
 
                 const message = 'Satu permintaan pertemuan Anda telah ditolak.';
-                sessionStorage.setItem(`notification_for_${nimMahasiswa}`, message);
+                localStorage.setItem(`notification_for_${nimMahasiswa}`, message);
                 
-                sessionStorage.setItem(storageKey, JSON.stringify(permintaan));
+                localStorage.setItem(storageKey, JSON.stringify(permintaan));
                 
                 $('#tolak-alasan-modal').addClass('hidden');
                 $(this)[0].reset();
