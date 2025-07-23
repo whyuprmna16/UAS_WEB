@@ -53,71 +53,288 @@ const jadwalDosen = {
     ]
 };
 
-// --- DATA AWAL PERTEMUAN UNTUK SETIAP MAHASISWA ---
-const initialMahasiswaData = {
-    '09030582226053': [
-        { dosen: 'Dr. Ir. Ahmad Heryanto, M.T.', keperluan: 'Bimbingan Tugas Akhir - Bab 3', jadwal: '21 Juli 2025, 10:00', status: 'Disetujui' },
-        { dosen: 'Prof. Siti Nurmaini, M.T.', keperluan: 'Konsultasi Kerja Praktik', jadwal: '22 Juli 2025, 09:30', status: 'Menunggu' },
-        { dosen: 'Dr. Retno Lestari, M.Kom.', keperluan: 'Revisi Jurnal Internasional', jadwal: '21 Juli 2025, 13:00', status: 'Menunggu' },
-        { dosen: 'Dr. Ir. Ahmad Heryanto, M.T.', keperluan: 'Bimbingan Tugas Akhir - Bab 2', jadwal: '14 Juli 2025, 10:00', status: 'Selesai', feedback: "Terima kasih banyak, Pak. Sesi bimbingan ini sangat membuka wawasan saya." }
-    ],
-    '0903058212608': [
-        { dosen: 'Iman Saladin, S.Kom., M.M.S.I.', keperluan: 'Diskusi Proyek Kelas RPL', jadwal: '25 Juli 2025, 09:30', status: 'Disetujui' },
-        { dosen: 'Dr. Ir. Ahmad Heryanto, M.T.', keperluan: 'Minta Tanda Tangan KRS', jadwal: '23 Juli 2025, 14:00', status: 'Ditolak', alasanTolak: 'Untuk tanda tangan KRS silakan temui saya langsung di ruangan pada jam kerja, tidak perlu melalui sistem.' },
-        { dosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.', keperluan: 'Diskusi topik penelitian', jadwal: '21 Juli 2025, 11:00', status: 'Selesai' }
-    ],
-    '09030582126015': [
-        { dosen: 'Prof. Siti Nurmaini, M.T.', keperluan: 'Bimbingan Akademik (PA)', jadwal: '24 Juli 2025, 13:00', status: 'Disetujui' },
-        { dosen: 'Prof. Siti Nurmaini, M.T.', keperluan: 'Konsultasi Proposal', jadwal: '15 Juli 2025, 09:00', status: 'Selesai', feedback: "Sangat membantu, Bu. Terima kasih telah meluangkan waktu." }
-    ],
-    '09030582327001': [ // Andi Wijaya
-        { dosen: 'Budi Santoso, S.T., M.Eng.', keperluan: 'Bimbingan Proyek IoT', jadwal: '22 Juli 2025, 14:00', status: 'Disetujui' },
-        { dosen: 'Dr. Retno Lestari, M.Kom.', keperluan: 'Konsultasi Machine Learning', jadwal: '16 Juli 2025, 09:00', status: 'Selesai', feedback: "Penjelasan sangat detail dan mudah dipahami." }
-    ],
-    '09030582327002': [ // Citra Lestari
-        { dosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.', keperluan: 'Validasi Kuesioner Penelitian', jadwal: '23 Juli 2025, 11:00', status: 'Menunggu' },
-        { dosen: 'Budi Santoso, S.T., M.Eng.', keperluan: 'Tanya soal UAS Jaringan Komputer', jadwal: '24 Juli 2025, 10:30', status: 'Ditolak', alasanTolak: 'Mohon maaf, pertanyaan seputar UAS hanya dilayani pada sesi kelas tambahan.' }
-    ],
-    '09030582327003': [ // Eko Nugroho
-        { dosen: 'Prof. Siti Nurmaini, M.T.', keperluan: 'Diskusi Lomba Gemastik', jadwal: '22 Juli 2025, 09:30', status: 'Disetujui' },
-        { dosen: 'Iman Saladin, S.Kom., M.M.S.I.', keperluan: 'Revisi Laporan Magang', jadwal: '18 Juli 2025, 10:00', status: 'Selesai', feedback: "Feedback sudah diberikan secara lisan." }
-    ],
-    '09030582327004': [ // Fitriani Indah
-        { dosen: 'Dr. Ir. Ahmad Heryanto, M.T.', keperluan: 'Persiapan Seminar Proposal', jadwal: '23 Juli 2025, 14:30', status: 'Menunggu' }
-    ]
-};
+// =================================================
+// DATA PERTEMUAN (SINGLE SOURCE OF TRUTH)
+// =================================================
+const initialSemuaPertemuan = [
+    // Setiap objek pertemuan sekarang memiliki ID unik dan data lengkap.
+    // ID Pertemuan 1-7: Permintaan untuk Prof. Siti Nurmaini, M.T. (0002085908)
+    {
+        idPertemuan: 1,
+        idDosen: '0002085908', namaDosen: 'Prof. Siti Nurmaini, M.T.',
+        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        keperluan: 'Konsultasi Kerja Praktik', jadwal: 'Selasa, 22 Juli 2025, 09:30',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 2,
+        idDosen: '0002085908', namaDosen: 'Prof. Siti Nurmaini, M.T.',
+        idMahasiswa: '09030582126015', namaMahasiswa: 'Wahyu Hidayat',
+        keperluan: 'Bimbingan Akademik (PA)', jadwal: 'Kamis, 24 Juli 2025, 13:00',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 3,
+        idDosen: '0002085908', namaDosen: 'Prof. Siti Nurmaini, M.T.',
+        idMahasiswa: '09030582327003', namaMahasiswa: 'Eko Nugroho',
+        keperluan: 'Diskusi Lomba Gemastik', jadwal: 'Selasa, 22 Juli 2025, 09:30',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 4,
+        idDosen: '0002085908', namaDosen: 'Prof. Siti Nurmaini, M.T.',
+        idMahasiswa: '09030582126015', namaMahasiswa: 'Wahyu Hidayat',
+        keperluan: 'Konsultasi Proposal', jadwal: '15 Juli 2025, 09:00',
+        status: 'Selesai', feedback: "Sangat membantu, Bu. Terima kasih telah meluangkan waktu.", alasanTolak: null
+    },
+    {
+        idPertemuan: 5,
+        idDosen: '0002085908', namaDosen: 'Prof. Siti Nurmaini, M.T.',
+        idMahasiswa: '09030582327002', namaMahasiswa: 'Citra Lestari',
+        keperluan: 'Minta Surat Rekomendasi', jadwal: 'Kamis, 24 Juli 2025, 13:30',
+        status: 'Ditolak', feedback: null, alasanTolak: 'Silakan ambil surat rekomendasi yang sudah jadi di ruang TU Akademik.'
+    },
+    {
+        idPertemuan: 6,
+        idDosen: '0002085908', namaDosen: 'Prof. Siti Nurmaini, M.T.',
+        idMahasiswa: '09030582327004', namaMahasiswa: 'Fitriani Indah',
+        keperluan: 'Validasi Instrumen Penelitian', jadwal: 'Selasa, 22 Juli 2025, 10:00',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 7,
+        idDosen: '0002085908', namaDosen: 'Prof. Siti Nurmaini, M.T.',
+        idMahasiswa: '09030582327001', namaMahasiswa: 'Andi Wijaya',
+        keperluan: 'Konsultasi Paper Ilmiah', jadwal: '17 Juli 2025, 11:00',
+        status: 'Feedback Diberikan', feedback: 'Struktur paper sudah bagus, tinggal perbaiki bagian abstrak dan kesimpulan.', alasanTolak: null
+    },
 
-// --- DATA AWAL PERMINTAAN UNTUK SETIAP DOSEN ---
-const initialDosenData = {
-    '0002085908': [ // Prof. Siti Nurmaini
-        { mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Konsultasi Kerja Praktik', jadwal: 'Selasa, 22 Juli 2025, 09:30', status: 'Menunggu' },
-        { mahasiswa: 'Eko Nugroho', nim: '09030582327003', keperluan: 'Diskusi Lomba Gemastik', jadwal: 'Selasa, 22 Juli 2025, 09:30', status: 'Disetujui' },
-        { mahasiswa: 'Wahyu Hidayat', nim: '09030582126015', keperluan: 'Bimbingan Akademik (PA)', jadwal: 'Kamis, 24 Juli 2025, 13:00', status: 'Disetujui' },
-        { mahasiswa: 'Wahyu Hidayat', nim: '09030582126015', keperluan: 'Konsultasi Proposal', jadwal: '15 Juli 2025, 09:00', status: 'Selesai', feedback: "Sangat membantu, Bu. Terima kasih telah meluangkan waktu." }
-    ],
-    '0022018703': [ // Dr. Ahmad Heryanto
-        { mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Bimbingan Tugas Akhir - Bab 3', jadwal: 'Senin, 21 Juli 2025, 10:00', status: 'Disetujui' },
-        { mahasiswa: 'Fitriani Indah', nim: '09030582327004', keperluan: 'Persiapan Seminar Proposal', jadwal: 'Rabu, 23 Juli 2025, 14:30', status: 'Menunggu' },
-        { mahasiswa: 'Rahayu Prasiska', nim: '0903058212608', keperluan: 'Minta Tanda Tangan KRS', jadwal: 'Rabu, 23 Juli 2025, 14:00', status: 'Ditolak', alasanTolak: 'Untuk tanda tangan KRS silakan temui saya langsung di ruangan pada jam kerja, tidak perlu melalui sistem.' },
-        { mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Bimbingan Tugas Akhir - Bab 2', jadwal: '14 Juli 2025, 10:00', status: 'Selesai', feedback: "Terima kasih banyak, Pak. Sesi bimbingan ini sangat membuka wawasan saya." }
-    ],
-    '0022108702': [ // Iman Saladin
-        { mahasiswa: 'Rahayu Prasiska', nim: '0903058212608', keperluan: 'Diskusi Proyek Kelas RPL', jadwal: 'Jumat, 25 Juli 2025, 09:30', status: 'Disetujui' },
-        { mahasiswa: 'Eko Nugroho', nim: '09030582327003', keperluan: 'Revisi Laporan Magang', jadwal: '18 Juli 2025, 10:00', status: 'Selesai', feedback: "Feedback sudah diberikan secara lisan." }
-    ],
-    '0011223301': [ // Dr. Retno Lestari
-        { mahasiswa: 'Wahyu Pramana', nim: '09030582226053', keperluan: 'Revisi Jurnal Internasional', jadwal: 'Senin, 21 Juli 2025, 13:00', status: 'Menunggu' },
-        { mahasiswa: 'Andi Wijaya', nim: '09030582327001', keperluan: 'Konsultasi Machine Learning', jadwal: '16 Juli 2025, 09:00', status: 'Selesai', feedback: "Penjelasan sangat detail dan mudah dipahami." }
-    ],
-    '0044556602': [ // Budi Santoso
-        { mahasiswa: 'Andi Wijaya', nim: '09030582327001', keperluan: 'Bimbingan Proyek IoT', jadwal: 'Selasa, 22 Juli 2025, 14:00', status: 'Disetujui' },
-        { mahasiswa: 'Citra Lestari', nim: '09030582327002', keperluan: 'Tanya soal UAS Jaringan Komputer', jadwal: 'Kamis, 24 Juli 2025, 10:30', status: 'Ditolak', alasanTolak: 'Mohon maaf, pertanyaan seputar UAS hanya dilayani pada sesi kelas tambahan.' }
-    ],
-    '0077889903': [ // Prof. Rina Marlina
-        { mahasiswa: 'Citra Lestari', nim: '09030582327002', keperluan: 'Validasi Kuesioner Penelitian', jadwal: 'Rabu, 23 Juli 2025, 11:00', status: 'Menunggu' },
-        { mahasiswa: 'Rahayu Prasiska', nim: '0903058212608', keperluan: 'Diskusi topik penelitian', jadwal: 'Senin, 21 Juli 2025, 11:00', status: 'Selesai' }
-    ]
-};
+    // ID Pertemuan 8-14: Permintaan untuk Dr. Ir. Ahmad Heryanto, M.T. (0022018703)
+    {
+        idPertemuan: 8,
+        idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
+        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        keperluan: 'Bimbingan Tugas Akhir - Bab 3', jadwal: 'Senin, 21 Juli 2025, 10:00',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 9,
+        idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
+        idMahasiswa: '09030582327004', namaMahasiswa: 'Fitriani Indah',
+        keperluan: 'Persiapan Seminar Proposal', jadwal: 'Rabu, 23 Juli 2025, 14:30',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 10,
+        idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
+        idMahasiswa: '0903058212608', namaMahasiswa: 'Rahayu Prasiska',
+        keperluan: 'Minta Tanda Tangan KRS', jadwal: 'Rabu, 23 Juli 2025, 14:00',
+        status: 'Ditolak', feedback: null, alasanTolak: 'Untuk tanda tangan KRS silakan temui saya langsung di ruangan pada jam kerja, tidak perlu melalui sistem.'
+    },
+    {
+        idPertemuan: 11,
+        idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
+        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        keperluan: 'Bimbingan Tugas Akhir - Bab 2', jadwal: '14 Juli 2025, 10:00',
+        status: 'Selesai', feedback: "Terima kasih banyak, Pak. Sesi bimbingan ini sangat membuka wawasan saya.", alasanTolak: null
+    },
+    {
+        idPertemuan: 12,
+        idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
+        idMahasiswa: '09030582327001', namaMahasiswa: 'Andi Wijaya',
+        keperluan: 'Diskusi Metodologi Penelitian', jadwal: 'Senin, 21 Juli 2025, 10:30',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 13,
+        idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
+        idMahasiswa: '09030582126015', namaMahasiswa: 'Wahyu Hidayat',
+        keperluan: 'Konsultasi Awal Topik TA', jadwal: 'Rabu, 23 Juli 2025, 15:00',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+     {
+        idPertemuan: 14,
+        idDosen: '0022018703', namaDosen: 'Dr. Ir. Ahmad Heryanto, M.T.',
+        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        keperluan: 'Bimbingan Tugas Akhir - Bab 1', jadwal: '7 Juli 2025, 10:00',
+        status: 'Feedback Diberikan', feedback: "Sudah oke, lanjutkan ke Bab 2.", alasanTolak: null
+    },
+
+    // ID Pertemuan 15-20: Permintaan untuk Iman Saladin, S.Kom., M.M.S.I. (0022108702)
+    {
+        idPertemuan: 15,
+        idDosen: '0022108702', namaDosen: 'Iman Saladin, S.Kom., M.M.S.I.',
+        idMahasiswa: '0903058212608', namaMahasiswa: 'Rahayu Prasiska',
+        keperluan: 'Diskusi Proyek Kelas RPL', jadwal: 'Jumat, 25 Juli 2025, 09:30',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 16,
+        idDosen: '0022108702', namaDosen: 'Iman Saladin, S.Kom., M.M.S.I.',
+        idMahasiswa: '09030582327003', namaMahasiswa: 'Eko Nugroho',
+        keperluan: 'Revisi Laporan Magang', jadwal: '18 Juli 2025, 10:00',
+        status: 'Selesai', feedback: "Feedback sudah diberikan secara lisan.", alasanTolak: null
+    },
+    {
+        idPertemuan: 17,
+        idDosen: '0022108702', namaDosen: 'Iman Saladin, S.Kom., M.M.S.I.',
+        idMahasiswa: '09030582327001', namaMahasiswa: 'Andi Wijaya',
+        keperluan: 'Presentasi Kemajuan Proyek', jadwal: 'Jumat, 25 Juli 2025, 10:00',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 18,
+        idDosen: '0022108702', namaDosen: 'Iman Saladin, S.Kom., M.M.S.I.',
+        idMahasiswa: '0903058212608', namaMahasiswa: 'Rahayu Prasiska',
+        keperluan: 'Tanya materi sebelum UTS', jadwal: 'Jumat, 25 Juli 2025, 10:30',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 19,
+        idDosen: '0022108702', namaDosen: 'Iman Saladin, S.Kom., M.M.S.I.',
+        idMahasiswa: '09030582327002', namaMahasiswa: 'Citra Lestari',
+        keperluan: 'Bimbingan Proyek Akhir', jadwal: '18 Juli 2025, 09:30',
+        status: 'Selesai', feedback: 'Bagus, pertahankan.', alasanTolak: null
+    },
+    {
+        idPertemuan: 20,
+        idDosen: '0022108702', namaDosen: 'Iman Saladin, S.Kom., M.M.S.I.',
+        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        keperluan: 'Pengesahan Laporan KP', jadwal: '11 Juli 2025, 10:00',
+        status: 'Feedback Diberikan', feedback: 'Laporan sudah disahkan.', alasanTolak: null
+    },
+
+    // ID Pertemuan 21-26: Permintaan untuk Dr. Retno Lestari, M.Kom. (0011223301)
+    {
+        idPertemuan: 21,
+        idDosen: '0011223301', namaDosen: 'Dr. Retno Lestari, M.Kom.',
+        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        keperluan: 'Revisi Jurnal Internasional', jadwal: 'Senin, 21 Juli 2025, 13:00',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 22,
+        idDosen: '0011223301', namaDosen: 'Dr. Retno Lestari, M.Kom.',
+        idMahasiswa: '09030582327001', namaMahasiswa: 'Andi Wijaya',
+        keperluan: 'Konsultasi Machine Learning', jadwal: '16 Juli 2025, 09:00',
+        status: 'Selesai', feedback: "Penjelasan sangat detail dan mudah dipahami.", alasanTolak: null
+    },
+    {
+        idPertemuan: 23,
+        idDosen: '0011223301', namaDosen: 'Dr. Retno Lestari, M.Kom.',
+        idMahasiswa: '09030582327004', namaMahasiswa: 'Fitriani Indah',
+        keperluan: 'Diskusi Algoritma Genetika', jadwal: 'Rabu, 23 Juli 2025, 09:00',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 24,
+        idDosen: '0011223301', namaDosen: 'Dr. Retno Lestari, M.Kom.',
+        idMahasiswa: '0903058212608', namaMahasiswa: 'Rahayu Prasiska',
+        keperluan: 'Bimbingan Lomba Data Mining', jadwal: 'Senin, 21 Juli 2025, 13:30',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 25,
+        idDosen: '0011223301', namaDosen: 'Dr. Retno Lestari, M.Kom.',
+        idMahasiswa: '09030582327002', namaMahasiswa: 'Citra Lestari',
+        keperluan: 'Revisi Tugas Besar', jadwal: '16 Juli 2025, 09:30',
+        status: 'Feedback Diberikan', feedback: 'Perbaiki bagian visualisasi data.', alasanTolak: null
+    },
+    {
+        idPertemuan: 26,
+        idDosen: '0011223301', namaDosen: 'Dr. Retno Lestari, M.Kom.',
+        idMahasiswa: '09030582327003', namaMahasiswa: 'Eko Nugroho',
+        keperluan: 'Izin tidak masuk kelas', jadwal: 'Rabu, 23 Juli 2025, 09:30',
+        status: 'Ditolak', feedback: null, alasanTolak: 'Izin sakit harap melampirkan surat dokter ke bagian akademik.'
+    },
+    
+    // Sisa data untuk dosen dan mahasiswa lainnya...
+    // (Data di bawah ini melengkapi kebutuhan per mahasiswa dan dosen)
+    {
+        idPertemuan: 27,
+        idDosen: '0044556602', namaDosen: 'Budi Santoso, S.T., M.Eng.',
+        idMahasiswa: '09030582327001', namaMahasiswa: 'Andi Wijaya',
+        keperluan: 'Bimbingan Proyek IoT', jadwal: 'Selasa, 22 Juli 2025, 14:00',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 28,
+        idDosen: '0044556602', namaDosen: 'Budi Santoso, S.T., M.Eng.',
+        idMahasiswa: '09030582327002', namaMahasiswa: 'Citra Lestari',
+        keperluan: 'Tanya soal UAS Jaringan Komputer', jadwal: 'Kamis, 24 Juli 2025, 10:30',
+        status: 'Ditolak', feedback: null, alasanTolak: 'Mohon maaf, pertanyaan seputar UAS hanya dilayani pada sesi kelas tambahan.'
+    },
+     {
+        idPertemuan: 29,
+        idDosen: '0044556602', namaDosen: 'Budi Santoso, S.T., M.Eng.',
+        idMahasiswa: '09030582126015', namaMahasiswa: 'Wahyu Hidayat',
+        keperluan: 'Konsultasi Jaringan Sensor Nirkabel', jadwal: 'Selasa, 22 Juli 2025, 14:30',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+     {
+        idPertemuan: 30,
+        idDosen: '0044556602', namaDosen: 'Budi Santoso, S.T., M.Eng.',
+        idMahasiswa: '09030582327003', namaMahasiswa: 'Eko Nugroho',
+        keperluan: 'Demo Alat Proyek Akhir', jadwal: 'Kamis, 24 Juli 2025, 11:00',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+     {
+        idPertemuan: 31,
+        idDosen: '0044556602', namaDosen: 'Budi Santoso, S.T., M.Eng.',
+        idMahasiswa: '0903058212608', namaMahasiswa: 'Rahayu Prasiska',
+        keperluan: 'Tanya terkait materi Cisco', jadwal: '15 Juli 2025, 14:00',
+        status: 'Selesai', feedback: 'Sudah dijelaskan via WhatsApp.', alasanTolak: null
+    },
+     {
+        idPertemuan: 32,
+        idDosen: '0044556602', namaDosen: 'Budi Santoso, S.T., M.Eng.',
+        idMahasiswa: '09030582327004', namaMahasiswa: 'Fitriani Indah',
+        keperluan: 'Ujian Susulan', jadwal: '17 Juli 2025, 14:00',
+        status: 'Feedback Diberikan', feedback: 'Hasil ujian susulan sudah diumumkan.', alasanTolak: null
+    },
+    {
+        idPertemuan: 33,
+        idDosen: '0077889903', namaDosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.',
+        idMahasiswa: '09030582327002', namaMahasiswa: 'Citra Lestari',
+        keperluan: 'Validasi Kuesioner Penelitian', jadwal: 'Rabu, 23 Juli 2025, 11:00',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 34,
+        idDosen: '0077889903', namaDosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.',
+        idMahasiswa: '0903058212608', namaMahasiswa: 'Rahayu Prasiska',
+        keperluan: 'Diskusi topik penelitian', jadwal: 'Senin, 21 Juli 2025, 11:00',
+        status: 'Selesai', feedback: 'Topik menarik, silakan dilanjutkan.', alasanTolak: null
+    },
+    {
+        idPertemuan: 35,
+        idDosen: '0077889903', namaDosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.',
+        idMahasiswa: '09030582126015', namaMahasiswa: 'Wahyu Hidayat',
+        keperluan: 'Bimbingan Metodologi', jadwal: 'Rabu, 23 Juli 2025, 11:30',
+        status: 'Disetujui', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 36,
+        idDosen: '0077889903', namaDosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.',
+        idMahasiswa: '09030582327003', namaMahasiswa: 'Eko Nugroho',
+        keperluan: 'Minta data untuk penelitian', jadwal: 'Jumat, 25 Juli 2025, 14:00',
+        status: 'Ditolak', feedback: null, alasanTolak: 'Data yang Anda minta bersifat rahasia.'
+    },
+    {
+        idPertemuan: 37,
+        idDosen: '0077889903', namaDosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.',
+        idMahasiswa: '09030582327004', namaMahasiswa: 'Fitriani Indah',
+        keperluan: 'Diskusi hasil olah data', jadwal: 'Jumat, 25 Juli 2025, 14:30',
+        status: 'Menunggu', feedback: null, alasanTolak: null
+    },
+    {
+        idPertemuan: 38,
+        idDosen: '0077889903', namaDosen: 'Prof. Dr. Ir. Rina Marlina, M.Sc.',
+        idMahasiswa: '09030582226053', namaMahasiswa: 'Wahyu Pramana',
+        keperluan: 'Bimbingan Kualitatif', jadwal: '14 Juli 2025, 11:00',
+        status: 'Feedback Diberikan', feedback: 'Metode sudah tepat.', alasanTolak: null
+    }
+];
 
 
 // =================================================
@@ -151,11 +368,19 @@ $(document).ready(function() {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
     if (loggedInUser) {
+        // TAMBAHKAN KODE INI
+        // =================================================================
+        // Cek dan inisialisasi data master jika belum ada di localStorage
+        if (!localStorage.getItem('semua_pertemuan')) {
+            localStorage.setItem('semua_pertemuan', JSON.stringify(initialSemuaPertemuan));
+        }
+        // =================================================================
+
         // Tampilkan nama pengguna dan siapkan fungsi logout
         $('.user-name').text(loggedInUser.name);
         $('.logout-link').on('click', function(e) {
             e.preventDefault();
-            localStorage.clear(); // Hapus semua data dari session storage
+            localStorage.removeItem('loggedInUser'); // UBAH MENJADI INI
             window.location.href = 'index.html';
         });
     } else {
@@ -169,14 +394,9 @@ $(document).ready(function() {
 
     // --- LOGIKA HALAMAN MAHASISWA ---
     if (loggedInUser && loggedInUser.role === 'mahasiswa') {
-        const storageKey = `pertemuan_${loggedInUser.id}`;
-        let pertemuanMahasiswa = JSON.parse(localStorage.getItem(storageKey));
-
-        // Jika data pertemuan belum ada di session, ambil dari data awal
-        if (!pertemuanMahasiswa) {
-            pertemuanMahasiswa = initialMahasiswaData[loggedInUser.id] || [];
-            localStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
-        }
+        // TAMBAHKAN 2 BARIS KODE INI SEBAGAI PENGGANTI:
+        const semuaPertemuan = JSON.parse(localStorage.getItem('semua_pertemuan'));
+        const pertemuanMahasiswa = semuaPertemuan.filter(p => p.idMahasiswa === loggedInUser.id);
 
         // Fungsi untuk merender tabel data pertemuan mahasiswa
         function renderMahasiswaTable(tableBody, data) {
@@ -198,7 +418,7 @@ $(document).ready(function() {
                             statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>`;
                         }
                     } else if (item.status === 'Selesai') {
-                        statusOrAction = `<button data-index="${index}" class="btn-feedback bg-purple-500 hover:bg-purple-600 text-white font-bold py-1 px-3 rounded text-xs">Beri Feedback</button>`;
+                        statusOrAction = `<button data-id-pertemuan="${item.idPertemuan}" class="btn-feedback bg-purple-500 hover:bg-purple-600 text-white font-bold py-1 px-3 rounded text-xs">Beri Feedback</button>`;
                     } else if (item.status === 'Feedback Diberikan') {
                         statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Feedback Diberikan</span>`;
                         rowClass = 'bg-purple-50';
@@ -206,7 +426,7 @@ $(document).ready(function() {
                         statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>`;
                     }
 
-                    const rowHtml = `<tr class="${rowClass}"><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${index + 1}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.dosen}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.keperluan}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.jadwal}</td><td class="px-6 py-4 whitespace-nowrap">${statusOrAction}</td></tr>`;
+                    const rowHtml = `<tr class="${rowClass}"><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${index + 1}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.namaDosen}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.keperluan}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.jadwal}</td><td class="px-6 py-4 whitespace-nowrap">${statusOrAction}</td></tr>`;
                     tableBody.append(rowHtml);
                 });
             } else {
@@ -240,9 +460,12 @@ $(document).ready(function() {
             const riwayatTableBody = $('#riwayat-table-body');
             renderMahasiswaTable(riwayatTableBody, pertemuanMahasiswa);
 
+            // GANTI BLOK INI: riwayatTableBody.on('click', '.btn-feedback', ...)
             riwayatTableBody.on('click', '.btn-feedback', function() {
-                const index = $(this).data('index');
-                $('#feedback-form').data('index', index);
+                // Ambil idPertemuan unik dari tombol
+                const idPertemuan = $(this).data('id-pertemuan');
+                // Simpan idPertemuan ke form modal untuk digunakan saat submit
+                $('#feedback-form').data('id-pertemuan', idPertemuan);
                 $('#give-feedback-modal').removeClass('hidden');
             });
 
@@ -256,34 +479,46 @@ $(document).ready(function() {
                 $('#lihat-alasan-modal').addClass('hidden');
             });
         }
-    }
 
-    // Event listener untuk form pengiriman feedback
-    $('#feedback-form').on('submit', function(event) {
-        event.preventDefault();
-        const index = $(this).data('index');
-        const feedbackText = $('#feedback-textarea').val();
-        const storageKey = `pertemuan_${loggedInUser.id}`;
-        let pertemuanMahasiswa = JSON.parse(localStorage.getItem(storageKey));
+        // GANTI SELURUH BLOK INI: $('#feedback-form').on('submit', ...)
+        $('#feedback-form').on('submit', function(event) {
+            event.preventDefault();
 
-        if (feedbackText) {
-            pertemuanMahasiswa[index].status = 'Feedback Diberikan';
-            pertemuanMahasiswa[index].feedback = feedbackText;
-            localStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
+            // 1. Ambil data yang diperlukan dari form dan modal
+            const idPertemuan = $(this).data('id-pertemuan');
+            const feedbackText = $('#feedback-textarea').val();
 
-            $('#give-feedback-modal').addClass('hidden');
-            $(this)[0].reset();
+            if (feedbackText) {
+                // 2. Ambil data master dari localStorage
+                let semuaPertemuan = JSON.parse(localStorage.getItem('semua_pertemuan'));
 
-            if (window.location.pathname.endsWith('riwayat-pertemuan-mahasiswa.html')) {
-                renderMahasiswaTable($('#riwayat-table-body'), pertemuanMahasiswa);
+                // 3. Cari index dari pertemuan yang akan diubah di data master
+                const indexToUpdate = semuaPertemuan.findIndex(p => p.idPertemuan === idPertemuan);
+
+                if (indexToUpdate !== -1) {
+                    // 4. Ubah status dan isi feedback di data master
+                    semuaPertemuan[indexToUpdate].status = 'Feedback Diberikan';
+                    semuaPertemuan[indexToUpdate].feedback = feedbackText;
+
+                    // 5. Simpan kembali seluruh data master yang sudah diperbarui
+                    localStorage.setItem('semua_pertemuan', JSON.stringify(semuaPertemuan));
+
+                    // 6. Tutup modal dan render ulang tabel
+                    $('#give-feedback-modal').addClass('hidden');
+                    $(this)[0].reset();
+
+                    // PERBAIKAN: Panggil fungsi render ulang dengan data yang sudah difilter ulang
+                    const dataMahasiswaTerbaru = semuaPertemuan.filter(p => p.idMahasiswa === loggedInUser.id);
+                    renderMahasiswaTable($('#riwayat-table-body'), dataMahasiswaTerbaru);
+                }
             }
-        }
-    });
+        });
 
-    $('.close-feedback-modal').on('click', function() {
-        $('#give-feedback-modal').addClass('hidden');
-        $('#feedback-form')[0].reset();
-    });
+        $('.close-feedback-modal').on('click', function() {
+            $('#give-feedback-modal').addClass('hidden');
+            $('#feedback-form')[0].reset();
+        });
+    }
 
     // --- LOGIKA HALAMAN AJUKAN PERTEMUAN ---
     if (window.location.pathname.endsWith('jadwal-mahasiswa.html')) {
@@ -314,174 +549,229 @@ $(document).ready(function() {
             $(this).addClass('active');
         });
 
+        // Ganti seluruh isi fungsi $('#form-pengajuan').on('submit', ...) dengan ini:
         $('#form-pengajuan').on('submit', function(event) {
             event.preventDefault();
+
+            // 1. Ambil semua data yang diperlukan dari form
             const keperluan = $('#keperluan').val();
-            const dosenNama = $('#pilihDosen option:selected').data('nama');
+            const selectedDosenOption = $('#pilihDosen option:selected');
+            const idDosen = selectedDosenOption.val();
+            const namaDosen = selectedDosenOption.data('nama');
             const jadwalText = $('.jadwal-card.active').data('jadwal-text');
-            if (!dosenNama || !jadwalText || !keperluan) {
+            
+            if (!idDosen || !jadwalText || !keperluan) {
                 alert('Harap lengkapi semua data: pilih dosen, pilih jadwal, dan isi keperluan.');
                 return;
             }
-            const storageKey = `pertemuan_${loggedInUser.id}`;
-            let pertemuanMahasiswa = JSON.parse(localStorage.getItem(storageKey)) || [];
-            pertemuanMahasiswa.push({ dosen: dosenNama, keperluan: keperluan, jadwal: jadwalText, status: 'Menunggu' });
-            localStorage.setItem(storageKey, JSON.stringify(pertemuanMahasiswa));
+
+            // 2. Ambil data master dari localStorage
+            let semuaPertemuan = JSON.parse(localStorage.getItem('semua_pertemuan'));
+
+            // 3. Buat objek pertemuan baru dengan struktur data yang lengkap dan benar
+            const newPertemuan = {
+                idPertemuan: Date.now(), // Gunakan timestamp untuk ID unik yang sederhana
+                idDosen: idDosen,
+                namaDosen: namaDosen,
+                idMahasiswa: loggedInUser.id,
+                namaMahasiswa: loggedInUser.name,
+                keperluan: keperluan,
+                jadwal: jadwalText,
+                status: 'Menunggu', // Status awal selalu 'Menunggu'
+                feedback: null,
+                alasanTolak: null
+            };
+
+            // 4. Tambahkan pertemuan baru ke dalam array data master
+            semuaPertemuan.push(newPertemuan);
+
+            // 5. Simpan kembali seluruh data master yang sudah diperbarui ke localStorage
+            localStorage.setItem('semua_pertemuan', JSON.stringify(semuaPertemuan));
+            
+            // 6. Tampilkan notifikasi sukses dan arahkan pengguna
             $('#success-alert').text('Berhasil! Pengajuan pertemuan Anda telah terkirim.').fadeIn();
             setTimeout(function() { window.location.href = "dashboard-mahasiswa.html"; }, 2000);
         });
     }
 
-    // --- LOGIKA UNTUK SEMUA HALAMAN DOSEN ---
-    if (loggedInUser && loggedInUser.role === 'dosen') {
-        const storageKey = `permintaan_${loggedInUser.id}`;
-        let permintaan = JSON.parse(localStorage.getItem(storageKey));
+// --- LOGIKA UNTUK SEMUA HALAMAN DOSEN ---
+if (loggedInUser && loggedInUser.role === 'dosen') {
+    const semuaPertemuan = JSON.parse(localStorage.getItem('semua_pertemuan'));
+    let dataPertemuanDosen = semuaPertemuan.filter(p => p.idDosen === loggedInUser.id);
 
-        if (!permintaan) {
-            permintaan = initialDosenData[loggedInUser.id] || [];
-            localStorage.setItem(storageKey, JSON.stringify(permintaan));
-        }
+    // --- Logika untuk Dashboard Dosen ---
+    if (window.location.pathname.endsWith('dashboard-dosen.html')) {
 
-        if (window.location.pathname.endsWith('dashboard-dosen.html')) {
-            const permintaanBaruCount = permintaan.filter(p => p.status === 'Menunggu').length;
-            const jadwalDisetujuiCount = permintaan.filter(p => p.status === 'Disetujui').length;
-            const pertemuanSelesaiCount = permintaan.filter(p => p.status === 'Selesai' || p.status === 'Feedback Diberikan').length;
+        dataPertemuanDosen = JSON.parse(localStorage.getItem('semua_pertemuan')).filter(p => p.idDosen === loggedInUser.id);
+        const permintaanBaruCount = dataPertemuanDosen.filter(p => p.status === 'Menunggu').length;
+        const jadwalDisetujuiCount = dataPertemuanDosen.filter(p => p.status === 'Disetujui').length;
+        const pertemuanSelesaiCount = dataPertemuanDosen.filter(p => p.status === 'Selesai' || p.status === 'Feedback Diberikan').length;
 
-            $('#permintaan-baru-count').text(permintaanBaruCount);
-            $('#total-disetujui-count').text(jadwalDisetujuiCount);
-            $('#pertemuan-selesai-count').text(pertemuanSelesaiCount);
+        $('#permintaan-baru-count').text(permintaanBaruCount);
+        $('#total-disetujui-count').text(jadwalDisetujuiCount);
+        $('#pertemuan-selesai-count').text(pertemuanSelesaiCount);
 
-            const tableBody = $('#permintaan-terbaru-body');
-            tableBody.empty();
-            const permintaanMenunggu = permintaan.filter(p => p.status === 'Menunggu').slice(0, 5);
-            if (permintaanMenunggu.length > 0) {
-                permintaanMenunggu.forEach(item => {
-                    const rowHtml = `<tr><td class="px-6 py-4">${item.mahasiswa} (${item.nim})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4 text-center"><a href="permintaan-dosen.html" class="text-blue-600 hover:text-blue-900 font-medium">Lihat Detail</a></td></tr>`;
-                    tableBody.append(rowHtml);
-                });
-            } else {
-                tableBody.append(`<tr><td colspan="3" class="text-center text-gray-500 py-4">Tidak ada permintaan baru.</td></tr>`);
-            }
-        }
-
-        if (window.location.pathname.endsWith('permintaan-dosen.html')) {
-            const tableBody = $('#permintaan-table-body');
-            const totalPermintaanSpan = $('#total-permintaan');
-
-            function renderTable() {
-                tableBody.empty();
-                const permintaanMenunggu = permintaan.filter(p => p.status === 'Menunggu');
-                totalPermintaanSpan.text(`Total: ${permintaanMenunggu.length} Permintaan Menunggu`);
-
-                permintaan.forEach((item, index) => {
-                    let statusOrAction;
-                    let rowClass = '';
-
-                    if (item.status === 'Disetujui') {
-                        statusOrAction = `<div class="action-buttons"><button data-index="${index}" class="btn-selesaikan bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs">Selesaikan</button></div>`;
-                        rowClass = 'bg-green-50';
-                    } else if (item.status === 'Ditolak') {
-                        statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>`;
-                        rowClass = 'bg-red-50';
-                    } else if (item.status === 'Selesai' || item.status === 'Feedback Diberikan') {
-                        statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Selesai</span>`;
-                        rowClass = 'bg-gray-100';
-                    } else { // Menunggu
-                        statusOrAction = `<div class="action-buttons space-x-2"><button data-index="${index}" class="btn-setujui bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded text-xs">Setujui</button><button data-index="${index}" class="btn-tolak bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs">Tolak</button></div>`;
-                    }
-
-                    const rowHtml = `<tr class="${rowClass}"><td class="px-6 py-4">${item.mahasiswa} (${item.nim})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4">${item.jadwal}</td><td class="px-6 py-4 text-center">${statusOrAction}</td></tr>`;
-                    tableBody.append(rowHtml);
-                });
-            }
-
-            renderTable();
-
-            tableBody.on('click', '.btn-setujui, .btn-selesaikan', function() {
-                const index = $(this).data('index');
-                const nimMahasiswa = permintaan[index].nim;
-                let message = '';
-
-                if ($(this).hasClass('btn-setujui')) {
-                    permintaan[index].status = 'Disetujui';
-                    message = 'Satu permintaan pertemuan Anda telah disetujui.';
-                } else if ($(this).hasClass('btn-selesaikan')) {
-                    permintaan[index].status = 'Selesai';
-                    message = 'Satu pertemuan Anda telah ditandai selesai oleh dosen.';
-                }
-
-                if (message) {
-                    localStorage.setItem(`notification_for_${nimMahasiswa}`, message);
-                }
-                localStorage.setItem(storageKey, JSON.stringify(permintaan));
-                renderTable();
+        const tableBody = $('#permintaan-terbaru-body');
+        tableBody.empty();
+        const permintaanMenunggu = dataPertemuanDosen.filter(p => p.status === 'Menunggu').slice(0, 5);
+        if (permintaanMenunggu.length > 0) {
+            permintaanMenunggu.forEach(item => {
+                // PERBAIKAN: Menggunakan properti yang benar 'namaMahasiswa' dan 'idMahasiswa'
+                const rowHtml = `<tr><td class="px-6 py-4">${item.namaMahasiswa} (${item.idMahasiswa})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4 text-center"><a href="permintaan-dosen.html" class="text-blue-600 hover:text-blue-900 font-medium">Lihat Detail</a></td></tr>`;
+                tableBody.append(rowHtml);
             });
-
-            tableBody.on('click', '.btn-tolak', function() {
-                const index = $(this).data('index');
-                $('#form-alasan-tolak').data('index', index);
-                $('#tolak-alasan-modal').removeClass('hidden');
-            });
-
-            $('#form-alasan-tolak').on('submit', function(e) {
-                e.preventDefault();
-                const index = $(this).data('index');
-                const alasan = $('#alasan-tolak-textarea').val();
-                const nimMahasiswa = permintaan[index].nim;
-
-                permintaan[index].status = 'Ditolak';
-                permintaan[index].alasanTolak = alasan;
-
-                const message = 'Satu permintaan pertemuan Anda telah ditolak.';
-                localStorage.setItem(`notification_for_${nimMahasiswa}`, message);
-                
-                localStorage.setItem(storageKey, JSON.stringify(permintaan));
-                
-                $('#tolak-alasan-modal').addClass('hidden');
-                $(this)[0].reset();
-                
-                renderTable();
-            });
-
-            $('.close-tolak-modal').on('click', function() {
-                $('#tolak-alasan-modal').addClass('hidden');
-                $('#form-alasan-tolak')[0].reset();
-            });
-        }
-
-        if (window.location.pathname.endsWith('pertemuan-selesai-dosen.html')) {
-            const tableBody = $('#selesai-table-body');
-            tableBody.empty();
-            const dataSelesai = permintaan.filter(p => p.status === 'Selesai' || p.status === 'Feedback Diberikan');
-            if (dataSelesai.length > 0) {
-                dataSelesai.forEach(item => {
-                    let feedbackCell;
-                    if (item.feedback) {
-                        const safeFeedback = item.feedback.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-                        feedbackCell = `<button data-feedback="${safeFeedback}" class="btn-lihat-feedback bg-purple-500 hover:bg-purple-600 text-white font-bold py-1 px-3 rounded text-xs">Lihat Feedback</button>`;
-                    } else {
-                        feedbackCell = `<span class="text-gray-400 text-xs italic">Belum ada</span>`;
-                    }
-                    const rowHtml = `<tr><td class="px-6 py-4">${item.mahasiswa} (${item.nim})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4">${item.jadwal}</td><td class="px-6 py-4 text-center">${feedbackCell}</td></tr>`;
-                    tableBody.append(rowHtml);
-                });
-
-                $('.btn-lihat-feedback').on('click', function() {
-                    const feedbackText = $(this).data('feedback');
-                    $('#feedback-content').text(feedbackText);
-                    $('#feedback-modal').removeClass('hidden');
-                });
-
-            } else {
-                tableBody.append(`<tr><td colspan="4" class="text-center text-gray-500 py-4">Belum ada pertemuan yang selesai.</td></tr>`);
-            }
+        } else {
+            tableBody.append(`<tr><td colspan="3" class="text-center text-gray-500 py-4">Tidak ada permintaan baru.</td></tr>`);
         }
     }
 
-    $('.close-modal').on('click', function() {
-        $('#feedback-modal').addClass('hidden');
-    });
+    // --- Logika untuk Halaman Permintaan Dosen ---
+    if (window.location.pathname.endsWith('permintaan-dosen.html')) {
+        const tableBody = $('#permintaan-table-body');
+        const totalPermintaanSpan = $('#total-permintaan');
 
+        function renderTable() {
+            // PERBAIKAN: Selalu ambil data terbaru dari localStorage setiap kali render ulang
+            const allData = JSON.parse(localStorage.getItem('semua_pertemuan'));
+            dataPertemuanDosen = allData.filter(p => p.idDosen === loggedInUser.id);
+
+            tableBody.empty();
+            const permintaanMenunggu = dataPertemuanDosen.filter(p => p.status === 'Menunggu');
+            totalPermintaanSpan.text(`Total: ${permintaanMenunggu.length} Permintaan Menunggu`);
+
+            dataPertemuanDosen.forEach(item => { // PERBAIKAN: Tidak perlu 'index' lagi
+                let statusOrAction;
+                let rowClass = '';
+
+                if (item.status === 'Disetujui') {
+                    // PERBAIKAN: Menggunakan 'idPertemuan' sebagai pengenal unik, bukan index
+                    statusOrAction = `<div class="action-buttons"><button data-id-pertemuan="${item.idPertemuan}" class="btn-selesaikan bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs">Selesaikan</button></div>`;
+                    rowClass = 'bg-green-50';
+                } else if (item.status === 'Ditolak') {
+                    statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>`;
+                    rowClass = 'bg-red-50';
+                } else if (item.status === 'Selesai' || item.status === 'Feedback Diberikan') {
+                    statusOrAction = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Selesai</span>`;
+                    rowClass = 'bg-gray-100';
+                } else { // Menunggu
+                    statusOrAction = `<div class="action-buttons space-x-2"><button data-id-pertemuan="${item.idPertemuan}" class="btn-setujui bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded text-xs">Setujui</button><button data-id-pertemuan="${item.idPertemuan}" class="btn-tolak bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs">Tolak</button></div>`;
+                }
+                
+                // PERBAIKAN: Menggunakan properti yang benar 'namaMahasiswa' dan 'idMahasiswa'
+                const rowHtml = `<tr class="${rowClass}"><td class="px-6 py-4">${item.namaMahasiswa} (${item.idMahasiswa})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4">${item.jadwal}</td><td class="px-6 py-4 text-center">${statusOrAction}</td></tr>`;
+                tableBody.append(rowHtml);
+            });
+        }
+
+        renderTable();
+
+        // PERBAIKAN: LOGIKA AKSI DIUBAH TOTAL
+        tableBody.on('click', '.btn-setujui, .btn-selesaikan', function() {
+            const idPertemuan = $(this).data('id-pertemuan');
+            let message = '';
+            let newStatus = '';
+
+            if ($(this).hasClass('btn-setujui')) {
+                message = 'Satu permintaan pertemuan Anda telah disetujui.';
+                newStatus = 'Disetujui';
+            } else if ($(this).hasClass('btn-selesaikan')) {
+                message = 'Satu pertemuan Anda telah ditandai selesai oleh dosen.';
+                newStatus = 'Selesai';
+            }
+            
+            // 1. Ambil data master dari localStorage
+            let semuaPertemuan = JSON.parse(localStorage.getItem('semua_pertemuan'));
+            
+            // 2. Cari index dari pertemuan yang akan diubah di data master
+            const indexToUpdate = semuaPertemuan.findIndex(p => p.idPertemuan === idPertemuan);
+
+            if (indexToUpdate !== -1) {
+                const nimMahasiswa = semuaPertemuan[indexToUpdate].idMahasiswa;
+                // 3. Ubah status di data master
+                semuaPertemuan[indexToUpdate].status = newStatus;
+                
+                // 4. Set notifikasi untuk mahasiswa
+                if (message) {
+                    localStorage.setItem(`notification_for_${nimMahasiswa}`, message);
+                }
+                
+                // 5. Simpan kembali data master yang sudah diubah ke localStorage
+                localStorage.setItem('semua_pertemuan', JSON.stringify(semuaPertemuan));
+                
+                // 6. Render ulang tabel
+                renderTable();
+            }
+        });
+
+        tableBody.on('click', '.btn-tolak', function() {
+            const idPertemuan = $(this).data('id-pertemuan');
+            $('#form-alasan-tolak').data('id-pertemuan', idPertemuan); // Gunakan id-pertemuan, bukan index
+            $('#tolak-alasan-modal').removeClass('hidden');
+        });
+
+        $('#form-alasan-tolak').on('submit', function(e) {
+            e.preventDefault();
+            const idPertemuan = $(this).data('id-pertemuan');
+            const alasan = $('#alasan-tolak-textarea').val();
+            
+            let semuaPertemuan = JSON.parse(localStorage.getItem('semua_pertemuan'));
+            const indexToUpdate = semuaPertemuan.findIndex(p => p.idPertemuan === idPertemuan);
+
+            if (indexToUpdate !== -1) {
+                const nimMahasiswa = semuaPertemuan[indexToUpdate].idMahasiswa;
+                semuaPertemuan[indexToUpdate].status = 'Ditolak';
+                semuaPertemuan[indexToUpdate].alasanTolak = alasan;
+
+                const message = 'Satu permintaan pertemuan Anda telah ditolak.';
+                localStorage.setItem(`notification_for_${nimMahasiswa}`, message);
+                localStorage.setItem('semua_pertemuan', JSON.stringify(semuaPertemuan));
+                
+                $('#tolak-alasan-modal').addClass('hidden');
+                $(this)[0].reset();
+                renderTable();
+            }
+        });
+
+        $('.close-tolak-modal').on('click', function() {
+            $('#tolak-alasan-modal').addClass('hidden');
+            $('#form-alasan-tolak')[0].reset();
+        });
+    }
+
+    // --- Logika untuk Halaman Pertemuan Selesai Dosen ---
+    if (window.location.pathname.endsWith('pertemuan-selesai-dosen.html')) {
+        const tableBody = $('#selesai-table-body');
+        tableBody.empty();
+        const dataSelesai = dataPertemuanDosen.filter(p => p.status === 'Selesai' || p.status === 'Feedback Diberikan');
+        if (dataSelesai.length > 0) {
+            dataSelesai.forEach(item => {
+                let feedbackCell;
+                if (item.feedback) {
+                    const safeFeedback = item.feedback.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                    feedbackCell = `<button data-feedback="${safeFeedback}" class="btn-lihat-feedback bg-purple-500 hover:bg-purple-600 text-white font-bold py-1 px-3 rounded text-xs">Lihat Feedback</button>`;
+                } else {
+                    feedbackCell = `<span class="text-gray-400 text-xs italic">Belum ada</span>`;
+                }
+                // PERBAIKAN: Menggunakan properti yang benar 'namaMahasiswa' dan 'idMahasiswa'
+                const rowHtml = `<tr><td class="px-6 py-4">${item.namaMahasiswa} (${item.idMahasiswa})</td><td class="px-6 py-4">${item.keperluan}</td><td class="px-6 py-4">${item.jadwal}</td><td class="px-6 py-4 text-center">${feedbackCell}</td></tr>`;
+                tableBody.append(rowHtml);
+            });
+
+            $('.btn-lihat-feedback').on('click', function() {
+                const feedbackText = $(this).data('feedback');
+                $('#feedback-content').text(feedbackText);
+                $('#feedback-modal').removeClass('hidden');
+            });
+
+        } else {
+            tableBody.append(`<tr><td colspan="4" class="text-center text-gray-500 py-4">Belum ada pertemuan yang selesai.</td></tr>`);
+        }
+    }
+  }
+
+    // =================================================
+    // LOGIKA UNTUK HALAMAN PROFIL (UNTUK SEMUA ROLE)
+    // =================================================
     if (window.location.pathname.endsWith('profil-mahasiswa.html') || window.location.pathname.endsWith('profil-dosen.html')) {
         if (loggedInUser) {
             $('#profile-name').text(loggedInUser.name);
@@ -489,4 +779,15 @@ $(document).ready(function() {
             $('#profile-role').text(loggedInUser.role);
         }
     }
+    // =================================================
+    // EVENT LISTENER UMUM UNTUK MENUTUP MODAL
+    // =================================================
+    $('.close-modal').on('click', function() {
+        // Menargetkan semua modal yang mungkin ada
+        $('#feedback-modal').addClass('hidden');
+        $('#lihat-alasan-modal').addClass('hidden');
+        $('#give-feedback-modal').addClass('hidden');
+        $('#tolak-alasan-modal').addClass('hidden');
+    });
+
 });
